@@ -28,7 +28,7 @@ kotlin {
             }
             @OptIn(ExperimentalDistributionDsl::class)
             distribution {
-                outputDirectory.set(project.rootDir.resolve("deploy"))
+                outputDirectory.set(project.rootDir.resolve("docs"))
             }
         }
         binaries.executable()
