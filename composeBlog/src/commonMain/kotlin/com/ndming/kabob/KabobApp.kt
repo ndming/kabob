@@ -19,15 +19,16 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ndming.kabob.composeblog.generated.resources.Res
+import com.ndming.kabob.composeblog.generated.resources.github
+import com.ndming.kabob.composeblog.generated.resources.linkedin
 import com.ndming.kabob.sitemap.KabobNavGraph
 import com.ndming.kabob.sitemap.KabobTopic
 import com.ndming.kabob.theme.KabobTheme
 import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
-import kabob.composeblog.generated.resources.Res
-import kabob.composeblog.generated.resources.github
-import kabob.composeblog.generated.resources.linkedin
 import kotlinx.browser.window
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -43,6 +44,9 @@ fun KabobApp(
 
     val kabobTheme = KabobTheme(uiState.currentProfile, uiState.currentConcept)
 
+    val drawerState = rememberDrawerState(DrawerValue.Open)
+    val coroutineScope = rememberCoroutineScope()
+
     CompositionLocalProvider(LocalKabobTheme provides kabobTheme) {
         KabobTheme {
             Surface(modifier = Modifier.fillMaxSize()) {
@@ -52,6 +56,13 @@ fun KabobApp(
                         currentProfile = uiState.currentProfile,
                         onNavRailToggle = {
                             onNavRailChange(!uiState.hideNavigation)
+                            coroutineScope.launch {
+                                if (uiState.hideNavigation) {
+                                    drawerState.open()
+                                } else {
+                                    drawerState.close()
+                                }
+                            }
                         },
                         onProfileToggle = {
                             if (uiState.currentProfile == Profile.LIGHT) {
@@ -189,35 +200,38 @@ private fun KabobNavigationRail(
     modifier: Modifier = Modifier,
     onTopicChange: (KabobTopic) -> Unit,
 ) {
-    NavigationRail(modifier = modifier.fillMaxHeight()) {
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Column {
-                KabobTopic.entries.forEach { topic ->
-                    NavigationRailItem(
-                        modifier = Modifier.padding(bottom = 18.dp),
-                        selected = currentDestination?.hierarchy?.any { it.route == topic.route } == true,
-                        icon = { Icon(topic.icon, "") },
-                        label = { Text(topic.label) },
-                        onClick = {
-                            navController.navigate(topic.route) {
-                                // Avoid building up a large stack of destinations
-                                val startDestId = navController.graph.findStartDestination()
-                                popUpTo(startDestId.route!!) { saveState = true }
-                                // Avoid multiple copies of the same destination
-                                launchSingleTop = true
-                                // Restore state when re-selecting a previously selected item
-                                restoreState = true
-                            }
+    Column(
+        modifier = modifier.fillMaxHeight().padding(horizontal = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        KabobTopic.entries.forEach { topic ->
+            val checked = currentDestination?.hierarchy?.any { it.route == topic.route } == true
+            FilledIconToggleButton(
+                modifier = Modifier.width(56.dp),
+                checked = checked,
+                onCheckedChange = {
+                    navController.navigate(topic.route) {
+                        // Avoid building up a large stack of destinations
+                        val startDestId = navController.graph.findStartDestination()
+                        popUpTo(startDestId.route!!) { saveState = true }
+                        // Avoid multiple copies of the same destination
+                        launchSingleTop = true
+                        // Restore state when re-selecting a previously selected item
+                        restoreState = true
+                    }
 
-                            onTopicChange(topic)
-                        },
-                    )
+                    onTopicChange(topic)
                 }
+            ) {
+                Icon(topic.icon, null)
             }
+
+            Text(
+                modifier =  Modifier.padding(top = 4.dp, bottom = 32.dp),
+                text = topic.label,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (checked) 0.8f else 0.4f),
+            )
         }
     }
 }

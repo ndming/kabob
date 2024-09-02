@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -6,6 +7,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose.multiplatform)
 }
+
+group = "com.ndming.kabob"
+version = "1.0.0"
 
 kotlin {
     @OptIn(ExperimentalWasmDsl::class)
@@ -21,6 +25,10 @@ kotlin {
                         add(projectDirPath)
                     }
                 }
+            }
+            @OptIn(ExperimentalDistributionDsl::class)
+            distribution {
+                outputDirectory.set(project.rootDir.resolve("deploy"))
             }
         }
         binaries.executable()

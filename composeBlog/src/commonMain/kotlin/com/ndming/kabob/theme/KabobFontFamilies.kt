@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import kabob.composeblog.generated.resources.*
-import kabob.composeblog.generated.resources.Res
+import com.ndming.kabob.composeblog.generated.resources.*
+import com.ndming.kabob.composeblog.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
 @Composable

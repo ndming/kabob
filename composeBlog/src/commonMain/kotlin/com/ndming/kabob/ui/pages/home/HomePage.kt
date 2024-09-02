@@ -18,13 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.ndming.kabob.composeblog.generated.resources.*
+import com.ndming.kabob.composeblog.generated.resources.Res
+import com.ndming.kabob.composeblog.generated.resources.home_avatar_dark
+import com.ndming.kabob.composeblog.generated.resources.home_avatar_light
+import com.ndming.kabob.composeblog.generated.resources.home_page_title
 import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
-import kabob.composeblog.generated.resources.*
-import kabob.composeblog.generated.resources.Res
-import kabob.composeblog.generated.resources.home_avatar_dark
-import kabob.composeblog.generated.resources.home_avatar_light
-import kabob.composeblog.generated.resources.home_page_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,8 +64,8 @@ fun HomeAvatar(modifier: Modifier = Modifier) {
         AnimatedContent(
             targetState = LocalKabobTheme.current.profile,
             transitionSpec = {
-                val contentEnter = fadeIn(tween(400)) + slideInVertically(tween(500)) { -it }
-                val contentExit = fadeOut(tween(600))
+                val contentEnter = fadeIn(tween(800)) // + scaleIn(tween(500), initialScale = 0.6f)
+                val contentExit = fadeOut(tween(600)) // + scaleOut(tween(500), targetScale = 0.6f)
                 contentEnter.togetherWith(contentExit)
             }
         ) { profile ->

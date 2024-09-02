@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 compose-plugin = "1.6.11"
 compose-lifecycle = "2.8.0"
 compose-navigation = "2.7.0-alpha07"
