@@ -11,6 +11,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ndming.kabob.composeblog.generated.resources.Res
+import com.ndming.kabob.composeblog.generated.resources.nav_panel_home_label
+import com.ndming.kabob.composeblog.generated.resources.nav_panel_visual_label
+import org.jetbrains.compose.resources.StringResource
 
 @Composable
 fun KabobNavGraph(
@@ -34,7 +38,7 @@ fun KabobNavGraph(
     }
 }
 
-enum class KabobTopic(val route: String, val label: String, val icon: ImageVector) {
-    HOME("home", "Home", Icons.Default.Home),
-    VISUAL("visual", "Visual", Icons.Default.Gesture),
+enum class KabobTopic(val route: String, val label: StringResource, val icon: ImageVector) {
+    HOME("home", Res.string.nav_panel_home_label, Icons.Default.Home),
+    VISUAL("visual", Res.string.nav_panel_visual_label, Icons.Default.Gesture),
 }

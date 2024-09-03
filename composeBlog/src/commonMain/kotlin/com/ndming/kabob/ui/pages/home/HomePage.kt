@@ -44,9 +44,8 @@ fun HomePage(modifier: Modifier = Modifier) {
                 ) {
                     if (this@BoxWithConstraints.maxWidth > 920.dp) {
                         HomeAvatar()
+                        Spacer(Modifier.width(24.dp))
                     }
-
-                    Spacer(Modifier.width(24.dp))
 
                     HomeHeadlines()
                 }
@@ -64,8 +63,8 @@ fun HomeAvatar(modifier: Modifier = Modifier) {
         AnimatedContent(
             targetState = LocalKabobTheme.current.profile,
             transitionSpec = {
-                val contentEnter = fadeIn(tween(800)) // + scaleIn(tween(500), initialScale = 0.6f)
-                val contentExit = fadeOut(tween(600)) // + scaleOut(tween(500), targetScale = 0.6f)
+                val contentEnter = fadeIn(tween(800))
+                val contentExit = fadeOut(tween(600))
                 contentEnter.togetherWith(contentExit)
             }
         ) { profile ->

@@ -1,17 +1,19 @@
 package com.ndming.kabob
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,6 +32,7 @@ import com.ndming.kabob.theme.Profile
 import kotlinx.browser.window
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun KabobApp(
@@ -74,30 +77,22 @@ fun KabobApp(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        AnimatedContent(
-                            targetState = uiState.hideNavigation,
-                            transitionSpec = {
-                                val contentEnter = fadeIn(tween(800)) + slideInHorizontally(tween(600))
-                                val contentExit = fadeOut(tween(200)) + slideOutHorizontally(tween(400))
-                                contentEnter.togetherWith(contentExit)
-                            }
-                        ) { hideRail ->
-                            if (!hideRail) {
-                                KabobNavigationRail(
-                                    navController = navController,
-                                    currentDestination = navBackStackEntry?.destination,
-                                    onTopicChange = onTopicChange,
-                                )
-                            }
+                        // Navigation rail/panel
+                        AnimatedVisibility(
+                            visible = !uiState.hideNavigation,
+                            enter = fadeIn(tween(800, 100)) + expandHorizontally(tween(400), Alignment.Start),
+                            exit = fadeOut(tween(300)) + shrinkHorizontally(tween(400), Alignment.Start),
+                        ) {
+                            KabobNavigationRail(
+                                navController = navController,
+                                currentDestination = navBackStackEntry?.destination,
+                                onTopicChange = onTopicChange,
+                            )
                         }
 
-                        val startPadding by animateDpAsState(
-                            targetValue = if (uiState.hideNavigation) 24.dp else 12.dp,
-                            animationSpec = spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessMedium)
-                        )
-
+                        // Site contents
                         KabobNavGraph(
-                            modifier = Modifier.padding(top = 4.dp, end = 24.dp, start = startPadding),
+                            modifier = Modifier.padding(top = 4.dp, end = 24.dp, start = 24.dp),
                             navController = navController,
                             startDestination = initialRoute,
                         )
@@ -119,10 +114,13 @@ private fun KabobTopBar(
 ) {
     TopAppBar(
         modifier = modifier.fillMaxWidth(),
-        title = { Text("ndming", Modifier.padding(horizontal = 12.dp)) },
+        title = { Text("ndming", Modifier.padding(horizontal = 24.dp)) },
         navigationIcon = {
+            // Toggle navigation visibility on/off
             IconButton(
-                modifier = Modifier.padding(horizontal = 12.dp),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .pointerHoverIcon(PointerIcon.Hand),
                 onClick = onNavRailToggle,
             ) {
                 AnimatedContent(
@@ -141,7 +139,9 @@ private fun KabobTopBar(
         actions = {
             // Light/dark mode button
             IconButton(
-                modifier = Modifier.padding(start = 12.dp),
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .pointerHoverIcon(PointerIcon.Hand),
                 onClick = onProfileToggle
             ) {
                 AnimatedContent(
@@ -160,7 +160,9 @@ private fun KabobTopBar(
 
             // GitHub button
             IconButton(
-                modifier = Modifier.padding(start = 12.dp),
+                modifier = Modifier
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .padding(start = 12.dp),
                 onClick = { window.open("https://github.com/ndming", "_blank") }
             ) {
                 Icon(
@@ -172,7 +174,9 @@ private fun KabobTopBar(
 
             // LinkedIn button
             IconButton(
-                modifier = Modifier.padding(start = 12.dp),
+                modifier = Modifier
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .padding(start = 12.dp),
                 onClick = { window.open("https://www.linkedin.com/in/minh-nguyen-59671b194/", "_blank") }
             ) {
                 Icon(
@@ -184,7 +188,9 @@ private fun KabobTopBar(
 
             // Email button
             IconButton(
-                modifier = Modifier.padding(horizontal = 12.dp),
+                modifier = Modifier
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .padding(horizontal = 12.dp),
                 onClick = { window.open("mailto:ndminh1101@gmail.com", "_blank") }
             ) {
                 Icon(Icons.Default.Mail, null)
@@ -201,13 +207,15 @@ private fun KabobNavigationRail(
     onTopicChange: (KabobTopic) -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxHeight().padding(horizontal = 12.dp),
+        modifier = modifier
+            .fillMaxHeight()
+            .padding(start = 18.dp, end = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         KabobTopic.entries.forEach { topic ->
             val checked = currentDestination?.hierarchy?.any { it.route == topic.route } == true
             FilledIconToggleButton(
-                modifier = Modifier.width(56.dp),
+                modifier = Modifier.width(56.dp).pointerHoverIcon(PointerIcon.Hand),
                 checked = checked,
                 onCheckedChange = {
                     navController.navigate(topic.route) {
@@ -228,7 +236,7 @@ private fun KabobNavigationRail(
 
             Text(
                 modifier =  Modifier.padding(top = 4.dp, bottom = 32.dp),
-                text = topic.label,
+                text = stringResource(topic.label),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (checked) 0.8f else 0.4f),
             )
