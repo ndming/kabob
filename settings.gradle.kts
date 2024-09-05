@@ -34,4 +34,7 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeBlog")
+include(":core")
+include(":markdown")
+include(":pages:Main")
+include(":pages:FourierSeries")

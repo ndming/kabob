@@ -1,0 +1,16 @@
+<resources>
+    <string name="nav_panel_home_label">Home</string>
+    <string name="nav_panel_article_label">Articles</string>
+    <string name="nav_panel_visual_label">Visuals</string>
+    <string name="nav_panel_project_label">Projects</string>
+
+    <string name="top_bar_home_title">home</string>
+    <string name="top_bar_article_title">articles</string>
+    <string name="top_bar_visual_title">visualizations</string>
+    <string name="top_bar_project_title">titles</string>
+
+    <string name="banner_title">Master Student Specialized in Computer Graphics and Visual Computing</string>
+    <string name="banner_institute">Norwegian University of Science and Technology</string>
+    <string name="banner_location">Gjøvik, Innlandet, Norway</string>
+    <string name="banner_interests">Computer Graphics, Visualization, Simulation</string>
+</resources>
