@@ -5,31 +5,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.font.FontFamily
+import org.w3c.dom.Window
 
 @Composable
-fun KabobTheme(content: @Composable () -> Unit) {
-    val (profile, concept) = LocalKabobTheme.current
-
-    val isLight = when (profile) {
-        Profile.LIGHT -> true
-        Profile.DARK -> false
-    }
-
-    val colorScheme = when {
-        isLight -> concept.lightScheme
-        else -> concept.darkScheme
-    }
+fun KabobTheme(
+    profile: Profile,
+    concept: Concept,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = if (profile == Profile.LIGHT) concept.lightScheme else concept.darkScheme
 
     val poppinsFamily = getPoppinsFamily()
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = getKabobTypography(poppinsFamily),
-        content = content
-    )
+    CompositionLocalProvider(LocalKabobTheme provides KabobTheme(profile, concept)) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = getKabobTypography(poppinsFamily),
+            content = content
+        )
+    }
 }
 
 val LocalKabobTheme = staticCompositionLocalOf{ KabobTheme() }
@@ -67,3 +65,16 @@ private fun getKabobTypography(family: FontFamily) = Typography(
     labelMedium = typography.labelMedium.copy(fontFamily = family),
     labelSmall = typography.labelSmall.copy(fontFamily = family),
 )
+
+fun Window.getInitialThemeState(): KabobTheme {
+    val profile = sessionStorage.getItem(PROFILE_KEY)
+        ?.let { value -> Profile.entries.find { it.name == value } } ?: Profile.DARK
+
+    val concept = sessionStorage.getItem(CONCEPT_KEY)
+        ?. let { value -> Concept.entries.find { it.name == value } } ?: Concept.CAPRICORN
+
+    return KabobTheme(profile, concept)
+}
+
+const val PROFILE_KEY = "theme_profile"
+const val CONCEPT_KEY = "theme_concept"

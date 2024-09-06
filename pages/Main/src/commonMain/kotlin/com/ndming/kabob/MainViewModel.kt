@@ -2,12 +2,15 @@ package com.ndming.kabob
 
 import androidx.lifecycle.ViewModel
 import com.ndming.kabob.theme.Concept
+import com.ndming.kabob.theme.PROFILE_KEY
 import com.ndming.kabob.theme.Profile
+import com.ndming.kabob.theme.getInitialThemeState
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.w3c.dom.Window
 
 data class MainUiState(
     val currentProfile: Profile,
@@ -37,7 +40,17 @@ class MainViewModel(uiState: MainUiState) : ViewModel() {
 
     companion object {
         const val ROUTE_KEY = "main_route"
-        const val PROFILE_KEY = "profile"
         const val NAV_RAIL_KEY = "nav_rail"
     }
+}
+
+fun Window.getInitialMainUiState(): MainUiState {
+    val initialRoute = sessionStorage.getItem(MainViewModel.ROUTE_KEY)
+        ?.let { value -> MainRoute.entries.find { it.route == value } } ?: MainRoute.Home
+
+    val hideNavigation = sessionStorage.getItem(MainViewModel.NAV_RAIL_KEY)?.toBoolean() ?: true
+
+    val (profile, concept) = getInitialThemeState()
+
+    return MainUiState(profile, concept, initialRoute, hideNavigation)
 }

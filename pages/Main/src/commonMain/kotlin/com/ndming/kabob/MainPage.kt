@@ -31,9 +31,10 @@ import org.jetbrains.compose.resources.stringResource
 fun MainPage(
     uiState: MainUiState,
     initialRoute: String,
-    onProfileChange: (Profile) -> Unit,
     onRouteChange: (MainRoute) -> Unit,
     onNavRailVisible: (Boolean) -> Unit,
+    currentProfile: Profile = Profile.DARK,
+    onProfileChange: (Profile) -> Unit = {},
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -45,7 +46,7 @@ fun MainPage(
                 title = {
                     MainTitle(currentRoute = uiState.currentRoute)
                 },
-                currentProfile = uiState.currentProfile,
+                currentProfile = currentProfile,
                 onProfileChange = onProfileChange,
                 navigationIcon = {
                     MainTopBarNavigationIcon(hideNavigationRail = uiState.hideNavigation) {

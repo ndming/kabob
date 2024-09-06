@@ -15,10 +15,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ndming.kabob.main.generated.resources.*
-import com.ndming.kabob.main.generated.resources.Res
-import com.ndming.kabob.main.generated.resources.nav_panel_home_label
-import com.ndming.kabob.main.generated.resources.nav_panel_visual_label
-import com.ndming.kabob.main.generated.resources.top_bar_home_title
 import com.ndming.kabob.ui.home.HomeRoute
 import com.ndming.kabob.ui.visual.VisualRoute
 import org.jetbrains.compose.resources.StringResource

@@ -22,10 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.main.generated.resources.*
-import com.ndming.kabob.main.generated.resources.Res
-import com.ndming.kabob.main.generated.resources.banner_institute
-import com.ndming.kabob.main.generated.resources.banner_location
-import com.ndming.kabob.main.generated.resources.banner_title
 import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
 import org.jetbrains.compose.resources.painterResource
@@ -102,7 +98,7 @@ fun HomeHeadlines(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.displaySmall,
                 )
             } else {
-                HomeAvatar(modifier = Modifier.align(Alignment.Center))
+                HomeAvatar(Modifier.align(Alignment.Center))
             }
         }
 
