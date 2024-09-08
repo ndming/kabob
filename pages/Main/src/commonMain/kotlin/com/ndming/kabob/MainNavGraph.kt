@@ -33,7 +33,7 @@ fun MainNavGraph(
     ) {
         composable(
             route = MainRoute.Home.route,
-            enterTransition = { fadeIn(tween(400)) },
+            enterTransition = { fadeIn(tween(300)) },
             exitTransition = { fadeOut(tween(300)) },
         ) {
             HomeRoute()
@@ -41,7 +41,7 @@ fun MainNavGraph(
 
         composable(
             route = MainRoute.Visual.route,
-            enterTransition = { fadeIn(tween(400)) },
+            enterTransition = { fadeIn(tween(300)) },
             exitTransition = { fadeOut(tween(300)) },
         ) {
             VisualRoute()
