@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.SwitchLeft
 import androidx.compose.material.icons.filled.SwitchRight
@@ -35,6 +36,8 @@ fun DrawableViewer(
     currentDrawableIndex: Int,
     currentSamplingRate: Float,
     modifier: Modifier = Modifier,
+    portrait: Boolean = false,
+    onPortraitViewerEscape: () -> Unit = {},
     onDrawableSelect: (Int) -> Unit,
     onSamplingRateChange: (Float) -> Unit,
 ) {
@@ -47,19 +50,31 @@ fun DrawableViewer(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 4.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            IconButton(
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand).padding(vertical = 8.dp),
-                onClick = { /* TODO: Add information panel */ }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primaryContainer,
-                )
+            if (portrait) {
+                IconButton(
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand).padding(vertical = 8.dp),
+                    onClick = onPortraitViewerEscape,
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
+            } else {
+                IconButton(
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand).padding(vertical = 8.dp),
+                    onClick = { /* TODO: Add information panel */ },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primaryContainer,
+                    )
+                }
             }
 
             AnimatedVisibility(
@@ -94,7 +109,7 @@ fun DrawableViewer(
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .widthIn(256.dp, 512.dp)
                 .aspectRatio(1.0f)
         ) {
             AnimatedContent(

@@ -10,6 +10,7 @@ import com.ndming.kabob.svg.parseDrawableSVG
 import com.ndming.kabob.svg.sample
 import com.ndming.kabob.theme.ThemeAwareViewModel
 import com.ndming.kabob.ui.DrawableBundle
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.w3c.dom.get
 import kotlin.math.*
 
 data class FourierSeriesUiState(
@@ -32,7 +34,15 @@ data class FourierSeriesUiState(
 )
 
 class FourierSeriesViewModel : ThemeAwareViewModel() {
-    private val _uiState = MutableStateFlow(FourierSeriesUiState())
+    private val _uiState: MutableStateFlow<FourierSeriesUiState>
+
+    init {
+        val drawableIndex = window.sessionStorage[FS_CURRENT_DRAWABLE_KEY]
+            ?.toInt()?.takeIf { it > 0 && it < DrawableBundle.entries.size } ?: 0
+
+        _uiState = MutableStateFlow(FourierSeriesUiState(currentDrawableIndex = drawableIndex))
+    }
+
     val uiState: StateFlow<FourierSeriesUiState> = _uiState.asStateFlow()
 
     private val timeAnimator = Animatable(0.0f)
@@ -91,10 +101,6 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
         }
     }
 
-    fun resetFadingFactor() {
-        _uiState.update { it.copy(fadingFactor = baseFadingFactor) }
-    }
-
     fun changeZoomFactor(factor: Float) {
         // Only zoom-in is allowed
         if (factor >= 1.0f) {
@@ -108,7 +114,7 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
 
     fun changeDrawable(index: Int, scope: CoroutineScope) {
         // Reset model states
-        _uiState.update { it.copy(loading = true, currentDrawableIndex = index, arrowCount = 0) }
+        _uiState.update { it.copy(loading = true, currentDrawableIndex = index, arrowCount = 0, zoomFactor = 1.0f) }
         pause(scope)
         changeTime(0.0f, scope)
         _arrowStates.clear()
@@ -118,6 +124,9 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
             updateSampleAt(index)
             _uiState.update { it.copy(loading = false) }
         }
+
+        // Store the current drawable
+        window.sessionStorage.setItem(FS_CURRENT_DRAWABLE_KEY, index.toString())
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -129,8 +138,6 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
         // Balance out the cycle duration and fading rate
         baseDurationMillis = samples.size.toFloat() / 1.5f
         baseFadingFactor = 17.0f / baseDurationMillis
-
-        resetFadingFactor()
     }
 
     fun addArrow() {
@@ -187,6 +194,8 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
 
     companion object {
         const val VIEWPORT_HALF_EXTENT = 10.0f
+
+        private const val FS_CURRENT_DRAWABLE_KEY = "fs_drawable_index"
     }
 }
 

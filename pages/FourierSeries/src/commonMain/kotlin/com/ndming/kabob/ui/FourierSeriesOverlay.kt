@@ -23,6 +23,7 @@ fun FourierSeriesOverlay(
     arrowCount: Int,
     currentTime: Float,
     modifier: Modifier = Modifier,
+    portrait: Boolean,
     onPlayingChange: (Boolean) -> Unit = {},
     onDurationScale: (Float) -> Unit = {},
     onLockToPath: (Boolean) -> Unit = {},
@@ -32,7 +33,7 @@ fun FourierSeriesOverlay(
     onTimeChangeFinished: () -> Unit = {},
     onIncreaseFadingFactor: () -> Unit = {},
     onDecreaseFadingFactor: () -> Unit = {},
-    onResetFadingFactor: () -> Unit = {},
+    onPortraitDrawableViewer: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -42,34 +43,44 @@ fun FourierSeriesOverlay(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
-                // Lock-to-path button
-                FilledIconToggleButton(
-                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                    checked = lockToPath,
-                    onCheckedChange = onLockToPath,
-                ) {
-                    Icon(
-                        imageVector = if (lockToPath) Icons.Default.Lock else Icons.Default.LockOpen,
-                        contentDescription = null,
+            Row {
+                Column {
+                    // Lock-to-path button
+                    FilledIconToggleButton(
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                        checked = lockToPath,
+                        onCheckedChange = onLockToPath,
+                    ) {
+                        Icon(
+                            imageVector = if (lockToPath) Icons.Default.Lock else Icons.Default.LockOpen,
+                            contentDescription = null,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    DurationPanel(
+                        loading = loading,
+                        scale = durationScale,
+                        onScale = onDurationScale,
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    FadingFactorPanel(
+                        onIncreaseFadingFactor = onIncreaseFadingFactor,
+                        onDecreaseFadingFactor = onDecreaseFadingFactor,
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                DurationPanel(
-                    loading = loading,
-                    scale = durationScale,
-                    onScale = onDurationScale,
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                FadingFactorPanel(
-                    onIncreaseFadingFactor = onIncreaseFadingFactor,
-                    onDecreaseFadingFactor = onDecreaseFadingFactor,
-                    onResetFadingFactor = onResetFadingFactor,
-                )
+                if (portrait) {
+                    FilledTonalButton(
+                        modifier = Modifier.padding(horizontal = 12.dp).pointerHoverIcon(PointerIcon.Hand),
+                        onClick = onPortraitDrawableViewer,
+                    ) {
+                        Text(text = "More")
+                    }
+                }
             }
 
             ArrowCountPanel(
@@ -135,11 +146,12 @@ private fun DurationPanel(
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }
+
         Text(
-            modifier = Modifier.padding(vertical = 8.dp),
             text = "x$scale",
             style = MaterialTheme.typography.labelLarge,
         )
+
         IconButton(
             modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             enabled = !loading,
@@ -165,7 +177,6 @@ private fun FadingFactorPanel(
     modifier: Modifier = Modifier,
     onIncreaseFadingFactor: () -> Unit,
     onDecreaseFadingFactor: () -> Unit,
-    onResetFadingFactor: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -182,15 +193,10 @@ private fun FadingFactorPanel(
             )
         }
 
-        IconButton(
-            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-            onClick = onResetFadingFactor,
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.avg_pace),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            painter = painterResource(Res.drawable.avg_pace),
+            contentDescription = null,
+        )
 
         IconButton(
             modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),

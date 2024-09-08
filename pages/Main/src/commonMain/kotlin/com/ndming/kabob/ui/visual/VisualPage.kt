@@ -21,7 +21,7 @@ fun VisualPage(modifier: Modifier = Modifier) {
     FlowRow(modifier = modifier) {
         VisualTopic(
             topicName = "Fourier Series",
-            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/fs/fs.html", "_self") }
+            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/fs/", "_self") }
         )
     }
 }

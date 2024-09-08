@@ -3,13 +3,13 @@ package com.ndming.kabob
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -33,48 +33,73 @@ fun MainPage(
     uiState: MainUiState,
     initialRoute: String,
     onRouteChange: (MainRoute) -> Unit,
-    onNavRailVisible: (Boolean) -> Unit,
+    onHideNavRail: (Boolean) -> Unit,
     onProfileChange: (Profile) -> Unit = {},
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Top bar
-            KabobTopBar(
-                title = {
-                    MainTitle(currentRoute = uiState.currentRoute)
-                },
-                currentProfile = LocalKabobTheme.current.profile,
-                onProfileChange = onProfileChange,
-                navigationIcon = {
-                    MainTopBarNavigationIcon(hideNavigationRail = uiState.hideNavigation) {
-                        onNavRailVisible(!uiState.hideNavigation)
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val portrait = maxWidth / maxHeight < 1.0f
+
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Top bar
+                KabobTopBar(
+                    title = {
+                        MainTitle(currentRoute = uiState.currentRoute)
+                    },
+                    currentProfile = LocalKabobTheme.current.profile,
+                    onProfileChange = onProfileChange,
+                    navigationIcon = {
+                        MainTopBarNavigationIcon(
+                            hideNavigationRail = uiState.hideNavigation,
+                            portrait = portrait,
+                        ) {
+                            onHideNavRail(!uiState.hideNavigation)
+                        }
+                    }
+                )
+
+                Box {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        // Navigation rail/panel
+                        AnimatedVisibility(
+                            visible = !uiState.hideNavigation && !portrait,
+                            enter = fadeIn(tween(800, 100)) + expandHorizontally(tween(400), Alignment.Start),
+                            exit = fadeOut(tween(300)) + shrinkHorizontally(tween(400), Alignment.Start),
+                        ) {
+                            MainNavigationRail(
+                                navController = navController,
+                                currentDestination = navBackStackEntry?.destination,
+                                onRouteChange = onRouteChange,
+                            )
+                        }
+
+                        // Site contents
+                        MainNavGraph(
+                            modifier = Modifier.padding(top = 4.dp, end = 24.dp, start = 24.dp),
+                            navController = navController,
+                            startDestination = initialRoute,
+                        )
+                    }
+
+                    this@Column.AnimatedVisibility(
+                        visible = !uiState.hideNavigation && portrait,
+                        enter = fadeIn(tween(400)),
+                        exit = fadeOut(tween(400)),
+                    ) {
+                        Surface(modifier = Modifier.fillMaxSize()) {
+                            MainNavigationPanel(
+                                navController = navController,
+                                currentDestination = navBackStackEntry?.destination,
+                            ) {
+                                onRouteChange(it)
+                                onHideNavRail(true)
+                            }
+                        }
                     }
                 }
-            )
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                // Navigation rail/panel
-                AnimatedVisibility(
-                    visible = !uiState.hideNavigation,
-                    enter = fadeIn(tween(800, 100)) + expandHorizontally(tween(400), Alignment.Start),
-                    exit = fadeOut(tween(300)) + shrinkHorizontally(tween(400), Alignment.Start),
-                ) {
-                    MainNavigationRail(
-                        navController = navController,
-                        currentDestination = navBackStackEntry?.destination,
-                        onRouteChange = onRouteChange,
-                    )
-                }
-
-                // Site contents
-                MainNavGraph(
-                    modifier = Modifier.padding(top = 4.dp, end = 24.dp, start = 24.dp),
-                    navController = navController,
-                    startDestination = initialRoute,
-                )
             }
         }
     }
@@ -136,11 +161,12 @@ private fun MainTitle(
 private fun MainTopBarNavigationIcon(
     hideNavigationRail: Boolean,
     modifier: Modifier = Modifier,
+    portrait: Boolean = false,
     onNavRailToggle: () -> Unit,
 ) {
     // Toggle navigation visibility on/off
     val startPadding by animateDpAsState(
-        targetValue = if (hideNavigationRail) 12.dp else 18.dp,
+        targetValue = if (!hideNavigationRail && !portrait) 18.dp else 12.dp,
         animationSpec = tween(400)
     )
     IconButton(
@@ -204,6 +230,59 @@ private fun MainNavigationRail(
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (checked) 0.8f else 0.4f),
             )
+        }
+    }
+}
+
+@Composable
+private fun MainNavigationPanel(
+    navController: NavHostController,
+    currentDestination: NavDestination?,
+    modifier: Modifier = Modifier,
+    onRouteChange: (MainRoute) -> Unit,
+) {
+    val selectedColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val unselectedColor = MaterialTheme.colorScheme.secondaryContainer
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        MainRoute.entries.forEach { topic ->
+            val selected = currentDestination?.hierarchy?.any { it.route == topic.route } == true
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .clickable {
+                        navController.navigate(topic.route) {
+                            // Avoid building up a large stack of destinations
+                            val startDestId = navController.graph.findStartDestination()
+                            popUpTo(startDestId.route!!) { saveState = true }
+                            // Avoid multiple copies of the same destination
+                            launchSingleTop = true
+                            // Restore state when re-selecting a previously selected item
+                            restoreState = true
+                        }
+
+                        onRouteChange(topic)
+                    }
+                    .padding(start = 28.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = topic.icon,
+                    contentDescription = null,
+                    tint = if (selected) selectedColor else unselectedColor,
+                )
+
+                Text(
+                    modifier =  Modifier.padding(horizontal = 24.dp, vertical = 32.dp),
+                    text = stringResource(topic.label),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (selected) selectedColor else unselectedColor,
+                )
+            }
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
         }
     }
 }

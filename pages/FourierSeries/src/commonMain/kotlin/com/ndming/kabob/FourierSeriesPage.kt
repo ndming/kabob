@@ -6,13 +6,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -63,7 +62,6 @@ fun FourierSeriesPage(
     onDropArrow: () -> Unit = {},
     onDrawableChange: (Int, CoroutineScope) -> Unit = { _, _ -> },
     onFadingFactorChange: (Float) -> Unit = {},
-    onResetFadingFactor: () -> Unit = {},
     onZoomFactor: (Float) -> Unit = {},
     onSamplingRate: (Float) -> Unit = {},
 ) {
@@ -73,6 +71,8 @@ fun FourierSeriesPage(
     val scope = rememberCoroutineScope()
 
     val markers = remember { mutableStateListOf<Marker>() }
+
+    var showPortraitDrawableViewer by remember { mutableStateOf(false) }
 
     Surface(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -94,7 +94,7 @@ fun FourierSeriesPage(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .pointerHoverIcon(PointerIcon.Hand),
-                        onClick = { window.open("../../index.html", "_self") },
+                        onClick = { window.open("https://ndming.github.io/", "_self") },
                     ) {
                         Icon(Icons.Default.Home, contentDescription = null)
                     }
@@ -104,6 +104,12 @@ fun FourierSeriesPage(
             // Main content
             BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(bottom = 12.dp)) {
                 val portrait = maxWidth / maxHeight < 1.8f
+
+                LaunchedEffect(portrait) {
+                    if (!portrait && showPortraitDrawableViewer) {
+                        showPortraitDrawableViewer = false
+                    }
+                }
 
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -135,6 +141,7 @@ fun FourierSeriesPage(
                             lockToPath = uiState.lockToPath,
                             arrowCount = uiState.arrowCount,
                             currentTime = currentTime,
+                            portrait = portrait,
                             onPlayingChange = { playing -> if (playing) onPlay(scope) else onPause(scope) },
                             onDurationScale = { onDurationScaleChange(it, scope) },
                             onAddArrow = onAddArrow,
@@ -144,9 +151,9 @@ fun FourierSeriesPage(
                             onTimeChangeFinished = { markers.clear() },
                             onIncreaseFadingFactor = { onFadingFactorChange(uiState.fadingFactor * 1.2f) },
                             onDecreaseFadingFactor = { onFadingFactorChange(uiState.fadingFactor / 1.2f) },
-                            onResetFadingFactor = onResetFadingFactor,
+                            onPortraitDrawableViewer = { showPortraitDrawableViewer = true },
                             modifier = Modifier
-                                .padding(18.dp)
+                                .padding(12.dp)
                                 .drawBehind {
                                     drawFourierScene(
                                         playing = uiState.playing,
@@ -176,6 +183,34 @@ fun FourierSeriesPage(
                     if (!portrait) {
                         Spacer(Modifier.width(24.dp))
                         FourierSeriesComponentViewer(Modifier.width(300.dp))
+                    }
+                }
+
+                this@Column.AnimatedVisibility(
+                    modifier = Modifier.align(Alignment.Center),
+                    visible = showPortraitDrawableViewer,
+                    enter = fadeIn(tween(400)),
+                    exit = fadeOut(tween(400)),
+                ) {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        DrawableViewer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState())
+                                .padding(horizontal = 12.dp),
+                            drawables = DrawableBundle.entries.map { it.drawable },
+                            displayNames = DrawableBundle.entries.map { it.displayName },
+                            currentDrawableIndex = uiState.currentDrawableIndex,
+                            currentSamplingRate = uiState.samplingRate,
+                            portrait = portrait,
+                            onSamplingRateChange = onSamplingRate,
+                            onPortraitViewerEscape = { showPortraitDrawableViewer = false },
+                            onDrawableSelect = {
+                                onDrawableChange(it, scope)
+                                markers.clear()
+                                showPortraitDrawableViewer = false
+                            },
+                        )
                     }
                 }
 

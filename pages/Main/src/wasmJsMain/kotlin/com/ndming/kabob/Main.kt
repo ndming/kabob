@@ -20,7 +20,7 @@ fun main() {
                 uiState = uiState,
                 initialRoute = mainViewModel.initialRoute.route,
                 onRouteChange = mainViewModel::changeRoute,
-                onNavRailVisible = mainViewModel::changeNavigationRailVisibility,
+                onHideNavRail = mainViewModel::changeNavigationRailVisibility,
                 onProfileChange = mainViewModel::changeProfile,
             )
         }

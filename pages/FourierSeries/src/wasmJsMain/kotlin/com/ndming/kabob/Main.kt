@@ -30,7 +30,6 @@ fun main() {
                 onLockToPathChange = fsViewModel::changeLockToPath,
                 onDrawableChange = fsViewModel::changeDrawable,
                 onFadingFactorChange = fsViewModel::changeFadingFactor,
-                onResetFadingFactor = fsViewModel::resetFadingFactor,
                 onZoomFactor = fsViewModel::changeZoomFactor,
                 onSamplingRate = fsViewModel::changeSamplingRate,
             )
