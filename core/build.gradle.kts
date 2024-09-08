@@ -26,6 +26,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.animation)
             implementation(compose.materialIconsExtended)
+            implementation(libs.jetbrains.lifecycle.viewmodel)
+            implementation(libs.jetbrains.lifecycle.compose)
         }
     }
 }

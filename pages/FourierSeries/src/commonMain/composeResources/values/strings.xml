@@ -1,0 +1,10 @@
+<resources>
+    <string name="fs_top_bar_title">Fourier Series - Drawing with Rotating Arrows</string>
+
+    <string name="fs_bundle_treble_clef_display_name">Treble Clef</string>
+    <string name="fs_bundle_vietnam_display_name">Vietnam</string>
+    <string name="fs_bundle_avenger_display_name">Avenger</string>
+    <string name="fs_bundle_sunflower_display_name">Sunflower</string>
+
+    <string name="fs_sampling_rate_option_name">Sampling Rate</string>
+</resources>

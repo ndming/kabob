@@ -22,6 +22,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
 import com.ndming.kabob.ui.KabobTopBar
@@ -33,7 +34,6 @@ fun MainPage(
     initialRoute: String,
     onRouteChange: (MainRoute) -> Unit,
     onNavRailVisible: (Boolean) -> Unit,
-    currentProfile: Profile = Profile.DARK,
     onProfileChange: (Profile) -> Unit = {},
 ) {
     val navController = rememberNavController()
@@ -46,7 +46,7 @@ fun MainPage(
                 title = {
                     MainTitle(currentRoute = uiState.currentRoute)
                 },
-                currentProfile = currentProfile,
+                currentProfile = LocalKabobTheme.current.profile,
                 onProfileChange = onProfileChange,
                 navigationIcon = {
                     MainTopBarNavigationIcon(hideNavigationRail = uiState.hideNavigation) {

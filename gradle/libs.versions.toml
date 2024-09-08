@@ -7,6 +7,8 @@ compose-compiler = "1.5.14"
 compose-bom = "2024.05.00"
 markdown-jetbrains = "0.7.3"
 serialization-kotlin = "1.7.1"
+ksoup = "0.1.5"
+multik = "0.2.3"
 
 [libraries]
 jetbrains-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "compose-lifecycle" }
@@ -14,6 +16,8 @@ jetbrains-lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name
 jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 jetbrains-markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown-jetbrains" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization-kotlin" }
+fleeksoft-ksoup = { group = "com.fleeksoft.ksoup", name = "ksoup", version.ref = "ksoup" }
+kotlinx-multik = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "multik" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

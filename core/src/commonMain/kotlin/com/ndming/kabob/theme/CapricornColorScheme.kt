@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 
 private val capricornColorLightPrimary              = Color(0xFF324D62)
 private val capricornColorLightOnPrimary            = Color(0xFFFEFEFE)
-private val capricornColorLightPrimaryContainer     = Color(0xFFE5F0FC)
+private val capricornColorLightPrimaryContainer     = Color(0xFFC4D6DD)
 private val capricornColorLightOnPrimaryContainer   = Color(0xFF0F2D44)
 private val capricornColorLightInversePrimary       = Color(0xFFD9E6F0)
 private val capricornColorLightSecondary            = Color(0xFF50606F)
