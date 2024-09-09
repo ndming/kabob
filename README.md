@@ -1,6 +1,6 @@
-# kabob: web blog posts built with Kotlin/WASM + Compose for Web
+# Kabob: Build web blog posts with Kotlin/WASM and Compose Multiplatform
 
-![News Kotlin Multiplatform AppPreview](gallery/cover.gif)
+![Fourier Series Visualization](gallery/cover.gif)
 
 [Try it yourself](https://ndming.github.io/visualizations/fs)
 
