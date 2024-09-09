@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,11 +20,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ndming.kabob.fourierseries.generated.resources.Res
@@ -85,6 +84,7 @@ fun FourierSeriesPage(
                         fontWeight = FontWeight.Medium,
                         fontSize = 20.sp,
                         maxLines = 1,
+                        overflow = TextOverflow.Visible,
                     )
                 },
                 currentProfile = LocalKabobTheme.current.profile,
@@ -153,7 +153,7 @@ fun FourierSeriesPage(
                             onDecreaseFadingFactor = { onFadingFactorChange(uiState.fadingFactor / 1.2f) },
                             onPortraitDrawableViewer = { showPortraitDrawableViewer = true },
                             modifier = Modifier
-                                .padding(12.dp)
+                                .padding(16.dp)
                                 .drawBehind {
                                     drawFourierScene(
                                         playing = uiState.playing,
@@ -177,6 +177,11 @@ fun FourierSeriesPage(
                                         onZoomFactor(newZoom)
                                     }
                                 }
+                                .pointerInput(Unit) {
+                                    detectTransformGestures(panZoomLock = true) { _, _, zoom, _ ->
+                                        onZoomFactor(uiState.zoomFactor * zoom)
+                                    }
+                                }
                         )
                     }
 
@@ -197,7 +202,7 @@ fun FourierSeriesPage(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState())
-                                .padding(horizontal = 12.dp),
+                                .padding(horizontal = 16.dp),
                             drawables = DrawableBundle.entries.map { it.drawable },
                             displayNames = DrawableBundle.entries.map { it.displayName },
                             currentDrawableIndex = uiState.currentDrawableIndex,

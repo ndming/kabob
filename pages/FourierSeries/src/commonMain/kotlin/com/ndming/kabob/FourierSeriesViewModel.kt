@@ -10,6 +10,7 @@ import com.ndming.kabob.svg.parseDrawableSVG
 import com.ndming.kabob.svg.sample
 import com.ndming.kabob.theme.ThemeAwareViewModel
 import com.ndming.kabob.ui.DrawableBundle
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.w3c.dom.events.Event
 import org.w3c.dom.get
 import kotlin.math.*
 
@@ -36,23 +38,35 @@ data class FourierSeriesUiState(
 class FourierSeriesViewModel : ThemeAwareViewModel() {
     private val _uiState: MutableStateFlow<FourierSeriesUiState>
 
+    private var samples: List<Offset> = listOf()
+    private var baseDurationMillis: Float = 0.0f
+    private var baseFadingFactor: Float = 2.5e-3f
+
     init {
         val drawableIndex = window.sessionStorage[FS_CURRENT_DRAWABLE_KEY]
             ?.toInt()?.takeIf { it > 0 && it < DrawableBundle.entries.size } ?: 0
 
         _uiState = MutableStateFlow(FourierSeriesUiState(currentDrawableIndex = drawableIndex))
+
+        viewModelScope.launch { updateSampleAt(drawableIndex) }
     }
 
     val uiState: StateFlow<FourierSeriesUiState> = _uiState.asStateFlow()
 
+    private val visibilityChangeCallback: (Event) -> Unit = {
+        if (windowHidden() && _uiState.value.playing) {
+            // Somehow we can pause with viewModelScope here
+            pause(viewModelScope)
+        }
+    }
+
+    init {
+        // Pause ongoing animation if the window lose focus
+        document.addEventListener("visibilitychange", visibilityChangeCallback)
+    }
+
     private val timeAnimator = Animatable(0.0f)
     val currentTime by timeAnimator.asState()
-
-    private var samples: List<Offset> = listOf()
-    private var baseDurationMillis: Float = 0.0f
-    private var baseFadingFactor: Float = 2.5e-3f
-
-    init { viewModelScope.launch { updateSampleAt(0) } }
 
     private val zoomAnimator = Animatable(_uiState.value.zoomFactor)
 
@@ -192,6 +206,11 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
         return sqrt(nx * nx + ny * ny) to atan2(ny, nx)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        document.removeEventListener("visibilitychange", visibilityChangeCallback)
+    }
+
     companion object {
         const val VIEWPORT_HALF_EXTENT = 10.0f
 
@@ -209,3 +228,5 @@ private suspend fun Animatable<Float, AnimationVector1D>.animatePlay(durationMil
     }
     animateTo(1.0f, infiniteRepeatable(tween(durationMillis.toInt(), easing = LinearEasing)))
 }
+
+private fun windowHidden(): Boolean = js("document.hidden")

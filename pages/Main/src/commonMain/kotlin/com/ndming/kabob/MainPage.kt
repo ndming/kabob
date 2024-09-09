@@ -66,7 +66,7 @@ fun MainPage(
                         // Navigation rail/panel
                         AnimatedVisibility(
                             visible = !uiState.hideNavigation && !portrait,
-                            enter = fadeIn(tween(800, 100)) + expandHorizontally(tween(400), Alignment.Start),
+                            enter = fadeIn(tween(600, 100)) + expandHorizontally(tween(400), Alignment.Start),
                             exit = fadeOut(tween(300)) + shrinkHorizontally(tween(400), Alignment.Start),
                         ) {
                             MainNavigationRail(
@@ -87,7 +87,7 @@ fun MainPage(
                     this@Column.AnimatedVisibility(
                         visible = !uiState.hideNavigation && portrait,
                         enter = fadeIn(tween(400)),
-                        exit = fadeOut(tween(400)),
+                        exit = fadeOut(tween(600)),
                     ) {
                         Surface(modifier = Modifier.fillMaxSize()) {
                             MainNavigationPanel(

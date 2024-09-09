@@ -7,4 +7,6 @@
     <string name="fs_bundle_sunflower_display_name">Sunflower</string>
 
     <string name="fs_sampling_rate_option_name">Sampling Rate</string>
+
+    <string name="fs_overlay_add_arrow_tip">Tip</string>
 </resources>

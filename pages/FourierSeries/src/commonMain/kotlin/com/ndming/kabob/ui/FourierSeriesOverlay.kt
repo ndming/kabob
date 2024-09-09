@@ -1,5 +1,7 @@
 package com.ndming.kabob.ui
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,7 +14,9 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.fourierseries.generated.resources.Res
 import com.ndming.kabob.fourierseries.generated.resources.avg_pace
+import com.ndming.kabob.fourierseries.generated.resources.fs_overlay_add_arrow_tip
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FourierSeriesOverlay(
@@ -75,7 +79,7 @@ fun FourierSeriesOverlay(
 
                 if (portrait) {
                     FilledTonalButton(
-                        modifier = Modifier.padding(horizontal = 12.dp).pointerHoverIcon(PointerIcon.Hand),
+                        modifier = Modifier.padding(horizontal = 18.dp).pointerHoverIcon(PointerIcon.Hand),
                         onClick = onPortraitDrawableViewer,
                     ) {
                         Text(text = "More")
@@ -86,6 +90,7 @@ fun FourierSeriesOverlay(
             ArrowCountPanel(
                 arrowCount = arrowCount,
                 loading = loading,
+                playing = playing,
                 onAddArrow = onAddArrow,
                 onDropArrow = onDropArrow,
             )
@@ -215,34 +220,68 @@ private fun FadingFactorPanel(
 private fun ArrowCountPanel(
     arrowCount: Int,
     loading: Boolean,
+    playing: Boolean,
     modifier: Modifier = Modifier,
     onAddArrow: () -> Unit,
     onDropArrow: () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        FilledIconButton(
-            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-            enabled = !loading,
-            onClick = onAddArrow,
+    Row(horizontalArrangement = Arrangement.End) {
+        AnimatedVisibility(
+            visible = playing && arrowCount == 0,
+            enter = fadeIn(tween(400)) + slideInHorizontally (tween(300)) { it },
+            exit = fadeOut(tween(300)) + slideOutHorizontally(tween(400)) { it },
         ) {
-            Icon(Icons.Default.KeyboardArrowUp, null)
+            Surface(
+                modifier = Modifier.wrapContentSize().padding(end = 8.dp, top = 12.dp),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        text = stringResource(Res.string.fs_overlay_add_arrow_tip),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+
+                    Icon(
+                        modifier = Modifier.size(18.dp),
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                    )
+                }
+            }
         }
 
-        Text(
-            modifier = Modifier.padding(vertical = 12.dp),
-            text = arrowCount.toString(),
-            style = MaterialTheme.typography.titleMedium,
-        )
-
-        FilledIconButton(
-            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-            enabled = !loading,
-            onClick = onDropArrow,
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Icon(Icons.Default.KeyboardArrowDown, null)
+            FilledIconButton(
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                enabled = !loading,
+                onClick = onAddArrow,
+            ) {
+                Icon(Icons.Default.KeyboardArrowUp, null)
+            }
+
+            Text(
+                modifier = Modifier.padding(vertical = 12.dp),
+                text = arrowCount.toString(),
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            FilledIconButton(
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                enabled = !loading,
+                onClick = onDropArrow,
+            ) {
+                Icon(Icons.Default.KeyboardArrowDown, null)
+            }
+
         }
     }
 }

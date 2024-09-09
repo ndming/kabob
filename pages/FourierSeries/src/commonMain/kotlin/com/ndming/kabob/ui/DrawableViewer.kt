@@ -50,7 +50,7 @@ fun DrawableViewer(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -84,6 +84,7 @@ fun DrawableViewer(
             ) {
                 Button(
                     modifier = Modifier
+                        .padding(end = 12.dp)
                         .pointerHoverIcon(PointerIcon.Hand)
                         .onPointerEvent(PointerEventType.Enter) { expandApplyButton = true }
                         .onPointerEvent(PointerEventType.Exit) { expandApplyButton = false },
@@ -229,6 +230,8 @@ private fun SamplingRateOption(
             text = "Sampling Rate",
             style = MaterialTheme.typography.bodyMedium,
         )
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         Slider(
             modifier = Modifier
