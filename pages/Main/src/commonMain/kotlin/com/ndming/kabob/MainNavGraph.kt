@@ -5,8 +5,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Gesture
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ndming.kabob.main.generated.resources.*
+import com.ndming.kabob.ui.article.ArticleRoute
 import com.ndming.kabob.ui.home.HomeRoute
 import com.ndming.kabob.ui.visual.VisualRoute
 import org.jetbrains.compose.resources.StringResource
@@ -42,6 +45,16 @@ fun MainNavGraph(
         }
 
         composable(
+            route = MainRoute.Article.route,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(200)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(200)) },
+        ) {
+            ArticleRoute()
+        }
+
+        composable(
             route = MainRoute.Visual.route,
             enterTransition = { fadeIn(tween(400)) },
             exitTransition = { fadeOut(tween(200)) },
@@ -64,6 +77,12 @@ enum class MainRoute(
         label = Res.string.nav_panel_home_label,
         title = Res.string.top_bar_home_title,
         icon  = Icons.Default.Home,
+    ),
+    Article(
+        route = "article",
+        label = Res.string.nav_panel_article_label,
+        title = Res.string.top_bar_article_title,
+        icon = Icons.AutoMirrored.Filled.LibraryBooks,
     ),
     Visual(
         route = "visual",
