@@ -28,7 +28,7 @@ kotlin {
             }
             @OptIn(ExperimentalDistributionDsl::class)
             distribution {
-                outputDirectory.set(project.rootDir.resolve("deploy/visualizations/fs"))
+                outputDirectory.set(project.rootDir.resolve("deploy/visualizations/fourier-series"))
             }
         }
 
