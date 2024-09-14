@@ -318,6 +318,13 @@ private fun DrawScope.drawFourierScene(
         markers.removeAt(0)
     }
 
+    // Draw a dot at the origin
+    drawCircle(
+        color = arrowColor,
+        radius = 5.0f,
+        center = (Offset.Zero - translateVector).mapDrawSpace(size, HALF_EXTENT / zoomFactor),
+    )
+
     // Draw rotating arrows
     arrowInfos.forEach { (origin, length, radians) ->
         drawArrow(color = arrowColor) {

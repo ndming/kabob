@@ -52,34 +52,24 @@ private fun DrawScope.drawArrow(color: Color, scope: DrawArrowScope) {
     val head = scope.head
     val tail = scope.tail
 
-    val arrowLength = (head - tail).getDistance()
-    val arrowTheta = (head - tail).getTheta()
+    val length = (head - tail).getDistance()
+    val theta = (head - tail).getTheta()
 
-    val arrowShaftHalfThickness = arrowLength * 0.01f
-    val arrowHeadHeightLength = arrowLength * 0.2f
-    val arrowHeadBaseLength = arrowHeadHeightLength * 1.0f
+    val base = tail + UNIT_X.rotate(theta).scale(length * 0.8f)
 
-    val unitX = Offset(1.0f, 0.0f)
-    val unitY = Offset(0.0f, 1.0f)
-
-    val p0 = tail + unitY.rotate(arrowTheta).scale(arrowShaftHalfThickness)
-    val p1 = p0 + unitX.rotate(arrowTheta).scale(arrowLength - arrowHeadHeightLength)
-    val p2 = p1 + unitX.rotate(PI.toFloat() / 2.0f + arrowTheta).scale(arrowHeadBaseLength / 2.0f - arrowShaftHalfThickness)
-    val p4 = p2 + unitX.rotate(arrowTheta - PI.toFloat() / 2.0f).scale(arrowHeadBaseLength)
-    val p5 = p1 + unitX.rotate(arrowTheta - PI.toFloat() / 2.0f).scale(arrowShaftHalfThickness * 2.0f)
-    val p6 = p0 + unitX.rotate(arrowTheta - PI.toFloat() / 2.0f).scale(arrowShaftHalfThickness * 2.0f)
-
-    val path = Path().apply {
+    val p0 = base + UNIT_Y.rotate(theta).scale(length * 0.2f / 2.0f)
+    val p1 = p0 + UNIT_X.rotate(theta - PI.toFloat() / 2.0f).scale(length * 0.2f)
+    val arrowHead = Path().apply {
         moveTo(p0.x, p0.y)
-        lineTo(p1.x, p1.y)
-        lineTo(p2.x, p2.y)
         lineTo(head.x, head.y)
-        lineTo(p4.x, p4.y)
-        lineTo(p5.x, p5.y)
-        lineTo(p6.x, p6.y)
+        lineTo(p1.x, p1.y)
         close()
     }
 
-    drawCircle(color, radius = arrowLength / 2.0f, center = (head + tail) / 2.0f, style = Stroke(0.25f))
-    drawPath(path, color)
+    drawCircle(color.copy(0.4f), radius = length / 2.0f, center = (head + tail) / 2.0f, style = Stroke(0.8f))
+    drawLine(color, tail, base, (length * 0.06f).coerceAtMost(1.6f))
+    drawPath(arrowHead, color)
 }
+
+private val UNIT_X = Offset(1.0f, 0.0f)
+private val UNIT_Y = Offset(0.0f, 1.0f)
