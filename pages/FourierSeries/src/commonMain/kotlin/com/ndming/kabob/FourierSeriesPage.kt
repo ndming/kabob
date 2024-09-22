@@ -9,9 +9,9 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.*
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -20,18 +20,14 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.input.pointer.*
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ndming.kabob.fourierseries.generated.resources.Res
 import com.ndming.kabob.fourierseries.generated.resources.fs_top_bar_title
-import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
-import com.ndming.kabob.theme.getJetBrainsMonoFamily
 import com.ndming.kabob.ui.*
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.PI
@@ -77,28 +73,8 @@ fun FourierSeriesPage(
         Column(modifier = Modifier.fillMaxSize()) {
             // Top bar
             KabobTopBar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.fs_top_bar_title),
-                        fontFamily = getJetBrainsMonoFamily(),
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 20.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Visible,
-                    )
-                },
-                currentProfile = LocalKabobTheme.current.profile,
+                title = stringResource(Res.string.fs_top_bar_title),
                 onProfileChange = onProfileChange,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .pointerHoverIcon(PointerIcon.Hand),
-                        onClick = { window.open("https://ndming.github.io/", "_self") },
-                    ) {
-                        Icon(Icons.Default.Home, contentDescription = null)
-                    }
-                }
             )
 
             // Main content

@@ -78,7 +78,7 @@ fun MainPage(
 
                         // Site contents
                         MainNavGraph(
-                            modifier = Modifier.padding(top = 4.dp, end = 24.dp, start = 24.dp),
+                            modifier = Modifier.padding(top = 4.dp),
                             navController = navController,
                             startDestination = initialRoute,
                         )

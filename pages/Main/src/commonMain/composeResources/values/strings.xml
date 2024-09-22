@@ -13,4 +13,13 @@
     <string name="banner_institute">Norwegian University of Science and Technology</string>
     <string name="banner_location">Gjøvik, Innlandet, Norway</string>
     <string name="banner_interests">Computer Graphics, Visualization, Simulation</string>
+
+    <string name="main_article_topic_svm_title">Support Vector Machine</string>
+    <string name="main_article_topic_brdf_title">BRDF</string>
+
+    <string name="main_article_tag_ml_name">Machine Learning</string>
+    <string name="main_article_tag_cg_name">Computer Graphics</string>
+
+    <string name="main_visual_topic_fs_title">Fourier Series</string>
+    <string name="main_visual_topic_metaball_title">Metaballs</string>
 </resources>

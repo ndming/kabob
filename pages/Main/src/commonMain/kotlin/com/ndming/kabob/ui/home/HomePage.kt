@@ -34,7 +34,7 @@ fun HomePage(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        Card(modifier = modifier.fillMaxWidth()) {
+        Card(modifier = modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
             BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier

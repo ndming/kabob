@@ -11,17 +11,31 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ndming.kabob.main.generated.resources.Res
+import com.ndming.kabob.main.generated.resources.main_visual_topic_fs_title
+import com.ndming.kabob.main.generated.resources.main_visual_topic_metaball_title
 import kotlinx.browser.window
+import org.jetbrains.compose.resources.stringResource
 
 private const val VISUAL_TOPIC_PREFIX = "visualizations"
+
+private const val VISUAL_TOPIC_FS       = "fourier-series"
+private const val VISUAL_TOPIC_METABALL = "metaballs"
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VisualPage(modifier: Modifier = Modifier) {
-    FlowRow(modifier = modifier) {
+    FlowRow(modifier = modifier.padding(start = 24.dp)) {
         VisualTopic(
-            topicName = "Fourier Series",
-            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/fourier-series", "_self") }
+            modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
+            topicName = stringResource(Res.string.main_visual_topic_fs_title),
+            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/$VISUAL_TOPIC_FS", "_self") }
+        )
+
+        VisualTopic(
+            modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
+            topicName = stringResource(Res.string.main_visual_topic_metaball_title),
+            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/$VISUAL_TOPIC_METABALL", "_self") }
         )
     }
 }

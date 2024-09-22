@@ -7,22 +7,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Mail
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ndming.kabob.core.generated.resources.Res
 import com.ndming.kabob.core.generated.resources.github
 import com.ndming.kabob.core.generated.resources.linkedin
+import com.ndming.kabob.theme.LocalKabobTheme
 import com.ndming.kabob.theme.Profile
+import com.ndming.kabob.theme.getJetBrainsMonoFamily
 import kotlinx.browser.window
 import org.jetbrains.compose.resources.painterResource
 
@@ -99,6 +102,39 @@ fun KabobTopBar(
                 onClick = { window.open("mailto:ndminh1101@gmail.com", "_blank") },
             ) {
                 Icon(Icons.Default.Mail, null)
+            }
+        }
+    )
+}
+
+@Composable
+fun KabobTopBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    onProfileChange: (Profile) -> Unit,
+) {
+    KabobTopBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = title,
+                fontFamily = getJetBrainsMonoFamily(),
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Visible,
+            )
+        },
+        currentProfile = LocalKabobTheme.current.profile,
+        onProfileChange = onProfileChange,
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .pointerHoverIcon(PointerIcon.Hand),
+                onClick = { window.open("https://ndming.github.io/", "_self") },
+            ) {
+                Icon(Icons.Default.Home, contentDescription = null)
             }
         }
     )

@@ -1,6 +1,5 @@
 package com.ndming.kabob.ui.article
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -13,19 +12,34 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ndming.kabob.main.generated.resources.Res
+import com.ndming.kabob.main.generated.resources.main_article_topic_brdf_title
+import com.ndming.kabob.main.generated.resources.main_article_topic_svm_title
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
 import kotlinx.browser.window
+import org.jetbrains.compose.resources.stringResource
 
 private const val ARTICLE_TOPIC_PREFIX = "articles"
+
+private const val ARTICLE_TOPIC_SVM  = "support-vector-machine"
+private const val ARTICLE_TOPIC_BRDF = "bidirectional-reflectance-distribution-function"
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ArticlePage(modifier: Modifier = Modifier) {
-    FlowRow(modifier = modifier) {
+    FlowRow(modifier = modifier.padding(start = 24.dp)) {
         ArticleTopic(
-            name = "Support Vector Machine",
+            modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
+            name = stringResource(Res.string.main_article_topic_svm_title),
             tags = listOf(ArticleTag.MachineLearning),
-            onClick = { window.open("$ARTICLE_TOPIC_PREFIX/support-vector-machine", "_self") },
+            onClick = { window.open("$ARTICLE_TOPIC_PREFIX/$ARTICLE_TOPIC_SVM", "_self") },
+        )
+
+        ArticleTopic(
+            modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
+            name = stringResource(Res.string.main_article_topic_brdf_title),
+            tags = listOf(ArticleTag.ComputerGraphics),
+            onClick = { window.open("$ARTICLE_TOPIC_PREFIX/$ARTICLE_TOPIC_BRDF", "_self") },
         )
     }
 }
@@ -42,15 +56,15 @@ private fun ArticleTopic(
 
     Column(
         modifier = modifier
-            .width(180.dp)
+            .width(160.dp)
             .wrapContentSize()
-            .pointerHoverIcon(PointerIcon.Hand)
-            .clickable { onClick() }
     ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(0.8f)
+                .pointerHoverIcon(PointerIcon.Hand),
+            onClick = onClick,
         ) {
             FlowRow(
                 modifier = Modifier
@@ -67,7 +81,7 @@ private fun ArticleTopic(
                             modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp),
                             text = tag.tagLabel,
                             fontFamily = tagLabelFamily,
-                            fontWeight = FontWeight.Medium,
+                            style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                         )
                     }
@@ -80,7 +94,6 @@ private fun ArticleTopic(
             text = name,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary,
         )
     }
 }
