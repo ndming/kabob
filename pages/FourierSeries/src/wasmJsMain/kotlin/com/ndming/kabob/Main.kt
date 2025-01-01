@@ -24,7 +24,7 @@ fun main() {
                 onTimeChange = fsViewModel::changeTime,
                 onPlay = fsViewModel::play,
                 onPause = fsViewModel::pause,
-                onDurationScaleChange = fsViewModel::changeDurationScale,
+                onDurationScaleChange = fsViewModel::changePeriodSpeed,
                 onAddArrow = fsViewModel::addArrow,
                 onDropArrow = fsViewModel::dropArrow,
                 onLockToPathChange = fsViewModel::changeLockToPath,

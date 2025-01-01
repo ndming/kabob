@@ -1,18 +1,21 @@
 <resources>
     <string name="nav_panel_home_label">Home</string>
     <string name="nav_panel_article_label">Articles</string>
-    <string name="nav_panel_visual_label">Visuals</string>
-    <string name="nav_panel_project_label">Projects</string>
+    <string name="nav_panel_visualization_label">Visuals</string>
+    <string name="nav_panel_simulation_label">Sims</string>
+
+    <string name="nav_portrait_visualization_label">Visualizations</string>
+    <string name="nav_portrait_simulation_label">Simulations</string>
 
     <string name="top_bar_home_title">home</string>
     <string name="top_bar_article_title">articles</string>
-    <string name="top_bar_visual_title">visualizations</string>
-    <string name="top_bar_project_title">titles</string>
+    <string name="top_bar_visualization_title">visualizations</string>
+    <string name="top_bar_simulation_title">simulations</string>
 
-    <string name="banner_title">Master's Student Specializing in Computer Graphics and Visual Computing</string>
-    <string name="banner_institute">Norwegian University of Science and Technology</string>
-    <string name="banner_location">Gjøvik, Innlandet, Norway</string>
-    <string name="banner_interests">Computer Graphics, Visualization, Simulation</string>
+    <string name="banner_title">Dinh Minh Nguyen</string>
+    <string name="banner_profession">Master's Student in Visual Computing</string>
+    <string name="banner_location">Oberkochen, Germany</string>
+    <string name="banner_interests">Graphics, Visualization, Simulation</string>
 
     <string name="main_article_topic_svm_title">Support Vector Machine</string>
     <string name="main_article_topic_brdf_title">BRDF</string>
@@ -22,4 +25,6 @@
 
     <string name="main_visual_topic_fs_title">Fourier Series</string>
     <string name="main_visual_topic_metaball_title">Metaballs</string>
+
+    <string name="main_sim_topic_pendulum_title">Pendulum</string>
 </resources>

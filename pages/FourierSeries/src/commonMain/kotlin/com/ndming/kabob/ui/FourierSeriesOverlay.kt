@@ -18,6 +18,28 @@ import com.ndming.kabob.fourierseries.generated.resources.fs_overlay_add_arrow_t
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A composable function that displays the UI elements for controlling and visualizing a Fourier series overlay.
+ *
+ * @param loading Indicates whether the overlay is in a loading state, disabling certain UI interactions.
+ * @param playing Indicates whether the Fourier series animation is currently playing.
+ * @param durationScale Represents the scaling factor for animation duration, which can be adjusted using the UI.
+ * @param lockToPath A boolean indicating if the animation is locked to the target path.
+ * @param arrowCount The number of arrows currently displayed in the overlay, adjustable via UI controls.
+ * @param currentTime The current animation time, which can be changed via the time slider.
+ * @param modifier The [Modifier] applied to the root column of the overlay.
+ * @param portrait A boolean indicating whether the display is in portrait mode, which toggles certain UI elements.
+ * @param onPlayingChange A callback triggered when the play/pause state changes; receives the new playing state as an argument.
+ * @param onDurationScale A callback invoked when the user adjusts the animation duration scaling factor.
+ * @param onLockToPath A callback triggered when the lock-to-path state is toggled.
+ * @param onAddArrow A callback triggered when a new arrow is added to the overlay.
+ * @param onDropArrow A callback triggered when an arrow is removed from the overlay.
+ * @param onTimeChange A callback triggered during animation time changes, typically from the time slider interaction.
+ * @param onTimeChangeFinished A callback invoked once the animation time change via the slider is complete.
+ * @param onIncreaseFadingFactor A callback invoked when the user increases the fading factor.
+ * @param onDecreaseFadingFactor A callback invoked when the user decreases the fading factor.
+ * @param onPortraitDrawableViewer A callback triggered when the user clicks the "More" button in portrait mode.
+ */
 @Composable
 fun FourierSeriesOverlay(
     loading: Boolean,

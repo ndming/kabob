@@ -32,14 +32,47 @@ import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.PI
 
-private const val HALF_EXTENT = FourierSeriesViewModel.VIEWPORT_HALF_EXTENT + 2.0f
+private const val VIEWPORT_HALF_EXTENT = FourierSeriesViewModel.CONTENT_HALF_EXTENT + 2.0f
 private const val ZOOM_SENSITIVITY = 1.06f
 
+/**
+ * A Marker represents a fading segment traced out at the tip of the last arrow.
+ */
 private data class Marker(
     val offset: Offset,
     val alpha: Float,
 )
 
+/**
+ * Composable function to render the user interface for visualizing a Fourier series.
+ *
+ * This function displays an interactive and dynamic Fourier series visualization, including controls
+ * to manipulate parameters such as time, zoom, arrows, fading factor, and more. It also allows for 
+ * interaction and customization through gestures and UI elements like scrolls and button clicks.
+ *
+ * @param uiState An object representing the UI state, including currentDrawable, loading status, 
+ *                sampling rate, playback state, and other key properties.
+ * @param currentTime The current time used for rendering the Fourier series dynamics.
+ * @param arrowStates A list of offsets representing the arrow states used in the Fourier series visualization.
+ * @param modifier An optional [Modifier] for applying layouts and decorations (default is [Modifier]).
+ * @param onProfileChange Callback for when the user changes the profile.
+ * @param onTimeChange Callback for when the time changes, providing the new time and a [CoroutineScope].
+ * @param onPlay Callback invoked when playback starts, providing a [CoroutineScope].
+ * @param onPause Callback invoked when playback pauses, providing a [CoroutineScope].
+ * @param onDurationScaleChange Callback for updating the duration scaling factor, accepting a new value 
+ *                              and a [CoroutineScope].
+ * @param onLockToPathChange Callback for toggling path-locking functionality, receiving a boolean value 
+ *                            for the lock state and a [CoroutineScope].
+ * @param onAddArrow Callback invoked to add a new arrow to the Fourier series visualization.
+ * @param onDropArrow Callback invoked to remove an arrow from the Fourier series visualization.
+ * @param onDrawableChange Callback triggered when the drawable changes, receiving the new drawable index 
+ *                          and a [CoroutineScope].
+ * @param onFadingFactorChange Callback for updating the fading factor used in the visualization.
+ * @param onZoomFactor Callback to update the zoom factor for the Fourier series.
+ * @param onSamplingRate Callback invoked when the sampling rate changes.
+ *
+ * @see [FourierSeriesUiState]
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FourierSeriesPage(
@@ -97,14 +130,13 @@ fun FourierSeriesPage(
                             modifier = Modifier.width(300.dp),
                             drawables = DrawableBundle.entries.map { it.drawable },
                             displayNames = DrawableBundle.entries.map { it.displayName },
-                            currentDrawableIndex = uiState.currentDrawableIndex,
+                            currentDrawableIndex = uiState.currentDrawable,
                             currentSamplingRate = uiState.samplingRate,
                             onSamplingRateChange = onSamplingRate,
-                            onDrawableSelect = {
-                                onDrawableChange(it, scope)
-                                markers.clear()
-                            },
-                        )
+                        ) {
+                            onDrawableChange(it, scope)
+                            markers.clear()
+                        }
 
                         Spacer(Modifier.width(24.dp))
                     }
@@ -113,7 +145,7 @@ fun FourierSeriesPage(
                         FourierSeriesOverlay(
                             loading = uiState.loading,
                             playing = uiState.playing,
-                            durationScale = uiState.durationScale,
+                            durationScale = uiState.periodSpeed,
                             lockToPath = uiState.lockToPath,
                             arrowCount = uiState.arrowCount,
                             currentTime = currentTime,
@@ -125,8 +157,8 @@ fun FourierSeriesPage(
                             onLockToPath = { onLockToPathChange(it, scope) },
                             onTimeChange = { onTimeChange(it, scope) },
                             onTimeChangeFinished = { markers.clear() },
-                            onIncreaseFadingFactor = { onFadingFactorChange(uiState.fadingFactor * 1.2f) },
-                            onDecreaseFadingFactor = { onFadingFactorChange(uiState.fadingFactor / 1.2f) },
+                            onIncreaseFadingFactor = { onFadingFactorChange(uiState.fadingScale * 1.2f) },
+                            onDecreaseFadingFactor = { onFadingFactorChange(uiState.fadingScale / 1.2f) },
                             onPortraitDrawableViewer = { showPortraitDrawableViewer = true },
                             modifier = Modifier
                                 .padding(16.dp)
@@ -134,9 +166,9 @@ fun FourierSeriesPage(
                                     drawFourierScene(
                                         playing = uiState.playing,
                                         currentTime = currentTime,
-                                        durationScale = uiState.durationScale,
+                                        durationScale = uiState.periodSpeed,
                                         lockToPath = uiState.lockToPath,
-                                        fadingFactor = uiState.fadingFactor,
+                                        fadingFactor = uiState.fadingScale,
                                         zoomFactor = uiState.zoomFactor,
                                         arrowStates = arrowStates,
                                         markers = markers,
@@ -163,10 +195,15 @@ fun FourierSeriesPage(
 
                     if (!portrait) {
                         Spacer(Modifier.width(24.dp))
-                        FourierSeriesComponentViewer(Modifier.width(300.dp))
+                        ComponentViewer(
+                            playing = uiState.playing,
+                            currentTime = currentTime,
+                            modifier = Modifier.width(300.dp)
+                        )
                     }
                 }
 
+                // Drawable viewer in portrait mode
                 this@Column.AnimatedVisibility(
                     modifier = Modifier.align(Alignment.Center),
                     visible = showPortraitDrawableViewer,
@@ -181,17 +218,16 @@ fun FourierSeriesPage(
                                 .padding(horizontal = 16.dp),
                             drawables = DrawableBundle.entries.map { it.drawable },
                             displayNames = DrawableBundle.entries.map { it.displayName },
-                            currentDrawableIndex = uiState.currentDrawableIndex,
+                            currentDrawableIndex = uiState.currentDrawable,
                             currentSamplingRate = uiState.samplingRate,
                             portrait = portrait,
                             onSamplingRateChange = onSamplingRate,
                             onPortraitViewerEscape = { showPortraitDrawableViewer = false },
-                            onDrawableSelect = {
-                                onDrawableChange(it, scope)
-                                markers.clear()
-                                showPortraitDrawableViewer = false
-                            },
-                        )
+                        ) {
+                            onDrawableChange(it, scope)
+                            markers.clear()
+                            showPortraitDrawableViewer = false
+                        }
                     }
                 }
 
@@ -229,26 +265,11 @@ private fun BoxWithConstraintsScope.FourierSeriesFrame(
     }
 }
 
-private data class ArrowInfo(
+private data class Snapshot(
     val origin: Offset,
     val length: Float,
     val radians: Float,
 )
-
-private fun List<Offset>.arrowInfos(time: Float): Pair<List<ArrowInfo>, Offset> {
-    var lastOffset = Offset.Zero
-    val infos = ArrayList<ArrowInfo>()
-
-    forEachIndexed { index, (length, theta) ->
-        val f = if (index % 2 == 0) index / 2 else -(index + 1) / 2
-        val radians = theta + time * f * 2.0f * PI.toFloat()
-
-        infos.add(ArrowInfo(lastOffset, length, radians))
-
-        lastOffset += Offset(1.0f, 0.0f).scale(length).rotate(radians)
-    }
-    return infos to lastOffset
-}
 
 private fun DrawScope.drawFourierScene(
     playing: Boolean,
@@ -262,13 +283,15 @@ private fun DrawScope.drawFourierScene(
     arrowColor: Color,
     segmentColor: Color,
 ) {
-    val (arrowInfos, lastOffset) = arrowStates.arrowInfos(currentTime)
+    val (snapshots, lastOffset) = arrowStates.toSnapshotsAt(currentTime)
     val translateVector = if (!lockToPath) Offset.Zero else lastOffset
 
     // Only add new markers when playing to avoid visual clutter when adding arrows on pause
-    if (playing) markers.add(Marker(lastOffset, 1.0f))
+    // We don't need to trace markers when there's less than 2 arrows, the first dynamic happens at the 2nd arrow
+    if (playing && arrowStates.size > 1) markers.add(Marker(lastOffset, 1.0f))
 
     // Draw tracing markers first so that they stay behind the arrows
+    // An iteration draws a segment using markers (i - 1, i) and updates marker i - 1's alpha
     var i = 1
     while (i < markers.size) {
         val currentAlpha = markers[i - 1].alpha
@@ -278,13 +301,9 @@ private fun DrawScope.drawFourierScene(
             alpha = currentAlpha
             width = 3.0f
             translate(-translateVector)
-            mapDrawSpace(size, HALF_EXTENT / zoomFactor)
+            mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor)
         }
-        val alphaDecrease = when (durationScale) {
-            0.25f -> fadingFactor * durationScale * 2.0f
-            0.5f -> fadingFactor * durationScale * 1.3f
-            else -> fadingFactor * durationScale
-        }
+        val alphaDecrease = fadingFactor * durationScale
         markers[i - 1] = markers[i - 1].copy(alpha = currentAlpha - alphaDecrease)
         ++i
     }
@@ -298,17 +317,32 @@ private fun DrawScope.drawFourierScene(
     drawCircle(
         color = arrowColor,
         radius = 5.0f,
-        center = (Offset.Zero - translateVector).mapDrawSpace(size, HALF_EXTENT / zoomFactor),
+        center = (Offset.Zero - translateVector).mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor),
     )
 
     // Draw rotating arrows
-    arrowInfos.forEach { (origin, length, radians) ->
+    snapshots.forEach { (origin, length, radians) ->
         drawArrow(color = arrowColor) {
             this.origin = origin
             this.length = length
             rotate(radians)
             translate(-translateVector)
-            mapDrawSpace(size, HALF_EXTENT / zoomFactor)
+            mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor)
         }
     }
+}
+
+private fun List<Offset>.toSnapshotsAt(time: Float): Pair<List<Snapshot>, Offset> {
+    var lastOffset = Offset.Zero
+    val snapshots  = ArrayList<Snapshot>(size)
+
+    forEachIndexed { index, (length, theta) ->
+        val f = if (index % 2 == 0) index / 2 else -(index + 1) / 2
+        val radians = theta + time * f * 2.0f * PI.toFloat()
+
+        snapshots.add(Snapshot(lastOffset, length, radians))
+
+        lastOffset += Offset(1.0f, 0.0f).scale(length).rotate(radians)
+    }
+    return snapshots to lastOffset
 }

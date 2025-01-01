@@ -14,11 +14,11 @@ version = "1.0.0"
 kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "kabob-page-metaball"
+        moduleName = "kabob-page-metaballs"
         browser {
             val projectDirPath = project.projectDir.path
             commonWebpackConfig {
-                outputFileName = "metaball.js"
+                outputFileName = "metaballs.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
@@ -48,8 +48,6 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.navigation.compose)
-            implementation(libs.fleeksoft.ksoup)
-            implementation(libs.kotlinx.multik)
         }
     }
 }

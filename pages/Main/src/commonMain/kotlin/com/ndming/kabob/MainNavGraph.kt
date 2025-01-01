@@ -5,10 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
-import androidx.compose.material.icons.filled.Gesture
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Science
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,8 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ndming.kabob.main.generated.resources.*
-import com.ndming.kabob.ui.article.ArticleRoute
 import com.ndming.kabob.ui.home.HomeRoute
+import com.ndming.kabob.ui.sim.SimulationRoute
 import com.ndming.kabob.ui.visual.VisualRoute
 import org.jetbrains.compose.resources.StringResource
 
@@ -44,15 +42,15 @@ fun MainNavGraph(
             HomeRoute()
         }
 
-        composable(
-            route = MainRoute.Article.route,
-            enterTransition = { fadeIn(tween(400)) },
-            exitTransition = { fadeOut(tween(200)) },
-            popEnterTransition = { fadeIn(tween(400)) },
-            popExitTransition = { fadeOut(tween(200)) },
-        ) {
-            ArticleRoute()
-        }
+//        composable(
+//            route = MainRoute.Article.route,
+//            enterTransition = { fadeIn(tween(400)) },
+//            exitTransition = { fadeOut(tween(200)) },
+//            popEnterTransition = { fadeIn(tween(400)) },
+//            popExitTransition = { fadeOut(tween(200)) },
+//        ) {
+//            ArticleRoute()
+//        }
 
         composable(
             route = MainRoute.Visual.route,
@@ -63,6 +61,16 @@ fun MainNavGraph(
         ) {
             VisualRoute()
         }
+
+        composable(
+            route = MainRoute.Sim.route,
+            enterTransition = { fadeIn(tween(400)) },
+            exitTransition = { fadeOut(tween(200)) },
+            popEnterTransition = { fadeIn(tween(400)) },
+            popExitTransition = { fadeOut(tween(200)) },
+        ) {
+            SimulationRoute()
+        }
     }
 }
 
@@ -70,7 +78,8 @@ enum class MainRoute(
     val route: String,
     val label: StringResource,
     val title: StringResource,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val labelVariant: StringResource? = null,
 ) {
     Home(
         route = "home",
@@ -78,16 +87,24 @@ enum class MainRoute(
         title = Res.string.top_bar_home_title,
         icon  = Icons.Default.Home,
     ),
-    Article(
-        route = "article",
-        label = Res.string.nav_panel_article_label,
-        title = Res.string.top_bar_article_title,
-        icon = Icons.AutoMirrored.Filled.LibraryBooks,
-    ),
+//    Article(
+//        route = "article",
+//        label = Res.string.nav_panel_article_label,
+//        title = Res.string.top_bar_article_title,
+//        icon = Icons.AutoMirrored.Filled.LibraryBooks,
+//    ),
     Visual(
         route = "visual",
-        label = Res.string.nav_panel_visual_label,
-        title = Res.string.top_bar_visual_title,
+        label = Res.string.nav_panel_visualization_label,
+        title = Res.string.top_bar_visualization_title,
         icon  = Icons.Default.Gesture,
+        labelVariant = Res.string.nav_portrait_visualization_label,
     ),
+    Sim(
+        route = "sim",
+        label = Res.string.nav_panel_simulation_label,
+        title = Res.string.top_bar_simulation_title,
+        icon  = Icons.Outlined.Science,
+        labelVariant = Res.string.nav_portrait_simulation_label,
+    )
 }

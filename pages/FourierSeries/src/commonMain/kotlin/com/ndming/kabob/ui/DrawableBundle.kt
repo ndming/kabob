@@ -6,6 +6,9 @@ import org.jetbrains.compose.resources.StringResource
 
 private const val BUNDLE_PREFIX = "files/bundles"
 
+/**
+ * A [DrawableBundle] registers all relevant attributes to include a drawing to the list of all Fourier Series drawables.
+ */
 enum class DrawableBundle(val path: String, val drawable: DrawableResource, val displayName: StringResource) {
     TrebleClef("$BUNDLE_PREFIX/treble-clef.svg", Res.drawable.treble_clef, Res.string.fs_bundle_treble_clef_display_name),
     Vietnam("$BUNDLE_PREFIX/vietnam.svg", Res.drawable.vietnam, Res.string.fs_bundle_vietnam_display_name),

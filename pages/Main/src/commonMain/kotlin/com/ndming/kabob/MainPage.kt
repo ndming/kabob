@@ -277,7 +277,7 @@ private fun MainNavigationPanel(
 
                 Text(
                     modifier =  Modifier.padding(horizontal = 24.dp, vertical = 32.dp),
-                    text = stringResource(topic.label),
+                    text = stringResource(topic.labelVariant ?: topic.label),
                     style = MaterialTheme.typography.titleMedium,
                     color = if (selected) selectedColor else unselectedColor,
                 )

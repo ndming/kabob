@@ -33,5 +33,6 @@ kotlin {
 }
 
 compose.resources {
+    // Make the generated Res class public (internal by default)
     publicResClass = true
 }

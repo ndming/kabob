@@ -1,6 +1,8 @@
 package com.ndming.kabob.ui.visual
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,23 +21,23 @@ import org.jetbrains.compose.resources.stringResource
 
 private const val VISUAL_TOPIC_PREFIX = "visualizations"
 
-private const val VISUAL_TOPIC_FS       = "fourier-series"
-private const val VISUAL_TOPIC_METABALL = "metaballs"
+private const val VISUAL_TOPIC_FOURIER_SERIES = "fourier-series"
+private const val VISUAL_TOPIC_METABALLS      = "metaballs"
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VisualPage(modifier: Modifier = Modifier) {
-    FlowRow(modifier = modifier.padding(start = 24.dp)) {
+    FlowRow(modifier = modifier.padding(start = 24.dp).verticalScroll(rememberScrollState())) {
         VisualTopic(
             modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
             topicName = stringResource(Res.string.main_visual_topic_fs_title),
-            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/$VISUAL_TOPIC_FS", "_self") }
+            onClick = { window.open("$VISUAL_TOPIC_PREFIX/$VISUAL_TOPIC_FOURIER_SERIES", "_self") }
         )
 
         VisualTopic(
             modifier = Modifier.padding(end = 24.dp, bottom = 24.dp),
             topicName = stringResource(Res.string.main_visual_topic_metaball_title),
-            onClick = { window.open("${VISUAL_TOPIC_PREFIX}/$VISUAL_TOPIC_METABALL", "_self") }
+            onClick = { window.open("$VISUAL_TOPIC_PREFIX/$VISUAL_TOPIC_METABALLS", "_self") }
         )
     }
 }

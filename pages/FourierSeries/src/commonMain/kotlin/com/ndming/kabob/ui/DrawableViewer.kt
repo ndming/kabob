@@ -28,6 +28,20 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A composable function that displays and manages a list of drawable resources and their sampling rate
+ * with interactive control options like switching, indicating, and sampling adjustments.
+ *
+ * @param drawables A list of drawable resources to display.
+ * @param displayNames A list of string resources representing display names of each drawable.
+ * @param currentDrawableIndex The index of the currently selected drawable in the list.
+ * @param currentSamplingRate The current sampling rate used for the drawable rendering.
+ * @param modifier Optional [Modifier] for customizing the layout or behavior of the viewer.
+ * @param portrait A boolean flag indicating if the display is in portrait mode.
+ * @param onPortraitViewerEscape Callback invoked when the "escape" action is triggered in portrait mode.
+ * @param onSamplingRateChange Callback triggered when the sampling rate is adjusted by the user.
+ * @param onDrawableSelect Callback invoked when a new drawable is selected by index.
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DrawableViewer(
@@ -38,8 +52,8 @@ fun DrawableViewer(
     modifier: Modifier = Modifier,
     portrait: Boolean = false,
     onPortraitViewerEscape: () -> Unit = {},
-    onDrawableSelect: (Int) -> Unit,
     onSamplingRateChange: (Float) -> Unit,
+    onDrawableSelect: (Int) -> Unit,
 ) {
     var currentShowingIndex by remember { mutableStateOf(currentDrawableIndex) }
 
