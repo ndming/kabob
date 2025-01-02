@@ -26,24 +26,24 @@ import kotlin.math.*
 /**
  * Represents the state of the Fourier Series UI and its associated properties.
  *
- * @property loading Indicates whether the UI is in a loading state.
+ * @property loading Indicates whether the UI is in a loading state (when loading a new drawable).
  * @property playing Indicates whether the Fourier series animation is currently playing.
- * @property lockToPath Determines if the zoom is locked to the drawable path.
- * @property arrowCount The number of arrows currently active in the animation.
+ * @property arrowCount The number of currently active arrows in the animation.
  * @property currentDrawable The index of the currently selected drawable resource.
- * @property periodSpeed Controls the speed of the period animation.
- * @property fadingScale Controls the fading effect in the animation.
+ * @property periodSpeed How much time it will take for the animation to complete a full period.
+ * @property fadingScale Controls the fading effect of the path traced by the tip of the last arrow.
  * @property zoomFactor Represents the current zoom factor for the animation view.
+ * @property lockFactor Determines if the viewport center is at the origin (0.0f) or locked to the tip of the last arrow (1.0f)
  * @property samplingRate Defines the rate at which the drawable path is sampled.
  */
 data class FourierSeriesUiState(
     val loading:         Boolean = true,
     val playing:         Boolean = false,
-    val lockToPath:      Boolean = false,
     val arrowCount:      Int     = 0,
     val currentDrawable: Int     = 0,
     val periodSpeed:     Float   = 1.0f,
     val fadingScale:     Float   = 1.0f,
+    val lockFactor:      Float   = 0.0f,
     val zoomFactor:      Float   = 1.0f,
     val samplingRate:    Float   = 125.0f,
 )
@@ -136,21 +136,6 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
         scope.launch { timeAnimator.snapTo(time) }
     }
 
-    private val zoomAnimator = Animatable(_uiState.value.zoomFactor)
-
-    fun changeLockToPath(locked: Boolean, scope: CoroutineScope) {
-        if (!locked && _uiState.value.zoomFactor > 1.5f && !zoomAnimator.isRunning) {
-            scope.launch {
-                zoomAnimator.snapTo(_uiState.value.zoomFactor)
-                zoomAnimator.animateTo(targetValue = 1.0f, animationSpec = tween(600)) {
-                    _uiState.update { it.copy(zoomFactor = this.value) }
-                }
-            }
-        } else if (!zoomAnimator.isRunning) {
-            _uiState.update { it.copy(lockToPath = locked) }
-        }
-    }
-
     fun changeFadingFactor(factor: Float) {
         // Fading factor shouldn't get too small to avoid harming performance
         if (factor > fadingDuration / 2.0f) {
@@ -158,9 +143,29 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
         }
     }
 
+    private val lockAnimator = Animatable(_uiState.value.lockFactor)
+    private val zoomAnimator = Animatable(_uiState.value.zoomFactor)
+
+    fun changeLockToPath(lock: Boolean, scope: CoroutineScope) {
+        scope.launch {
+            lockAnimator.animateTo(targetValue = if (lock) 1.0f else 0.0f, animationSpec = tween(600)) {
+                _uiState.update { it.copy(lockFactor = this.value) }
+            }
+        }
+        if (!lock) {
+            // Also zooming out if changing to lock-free
+            scope.launch {
+                zoomAnimator.snapTo(_uiState.value.zoomFactor)
+                zoomAnimator.animateTo(targetValue = 1.0f, animationSpec = tween(600)) {
+                    _uiState.update { it.copy(zoomFactor = this.value) }
+                }
+            }
+        }
+    }
+
     fun changeZoomFactor(factor: Float) {
         // Only zoom-in is allowed
-        if (factor >= 1.0f) {
+        if (factor >= 1.0f && !zoomAnimator.isRunning) {
             _uiState.update { it.copy(zoomFactor = factor) }
         }
     }
@@ -216,7 +221,7 @@ class FourierSeriesViewModel : ThemeAwareViewModel() {
 
         // Balance out the period and fading durations based on the path length
         periodDuration = samples.size.toFloat() / 1.5f
-        fadingDuration = 1.0f / (0.06f * periodDuration)
+        fadingDuration = 1.0f / (0.05f * periodDuration)
     }
 
     fun addArrow() {

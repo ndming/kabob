@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.fourierseries.generated.resources.Res
 import com.ndming.kabob.fourierseries.generated.resources.fs_top_bar_title
@@ -114,6 +112,7 @@ fun FourierSeriesPage(
             BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(bottom = 12.dp)) {
                 val portrait = maxWidth / maxHeight < 1.8f
 
+                // Close the portrait drawable viewer when switching to non-portrait mode
                 LaunchedEffect(portrait) {
                     if (!portrait && showPortraitDrawableViewer) {
                         showPortraitDrawableViewer = false
@@ -146,7 +145,7 @@ fun FourierSeriesPage(
                             loading = uiState.loading,
                             playing = uiState.playing,
                             durationScale = uiState.periodSpeed,
-                            lockToPath = uiState.lockToPath,
+                            lockToPath = uiState.lockFactor > 0.0f,
                             arrowCount = uiState.arrowCount,
                             currentTime = currentTime,
                             portrait = portrait,
@@ -167,8 +166,8 @@ fun FourierSeriesPage(
                                         playing = uiState.playing,
                                         currentTime = currentTime,
                                         durationScale = uiState.periodSpeed,
-                                        lockToPath = uiState.lockToPath,
                                         fadingFactor = uiState.fadingScale,
+                                        lockFactor = uiState.lockFactor,
                                         zoomFactor = uiState.zoomFactor,
                                         arrowStates = arrowStates,
                                         markers = markers,
@@ -183,11 +182,6 @@ fun FourierSeriesPage(
                                         val newZoom = if (scrollDelta > 0) uiState.zoomFactor / ZOOM_SENSITIVITY
                                         else uiState.zoomFactor * ZOOM_SENSITIVITY
                                         onZoomFactor(newZoom)
-                                    }
-                                }
-                                .pointerInput(Unit) {
-                                    detectTransformGestures(panZoomLock = true) { _, _, zoom, _ ->
-                                        onZoomFactor(uiState.zoomFactor * zoom)
                                     }
                                 }
                         )
@@ -275,8 +269,8 @@ private fun DrawScope.drawFourierScene(
     playing: Boolean,
     currentTime: Float,
     durationScale: Float,
-    lockToPath: Boolean,
     fadingFactor: Float,
+    lockFactor: Float,
     zoomFactor: Float,
     arrowStates: List<Offset>,
     markers: MutableList<Marker>,
@@ -284,7 +278,7 @@ private fun DrawScope.drawFourierScene(
     segmentColor: Color,
 ) {
     val (snapshots, lastOffset) = arrowStates.toSnapshotsAt(currentTime)
-    val translateVector = if (!lockToPath) Offset.Zero else lastOffset
+    val translateVector = lastOffset * lockFactor
 
     // Only add new markers when playing to avoid visual clutter when adding arrows on pause
     // We don't need to trace markers when there's less than 2 arrows, the first dynamic happens at the 2nd arrow
