@@ -13,9 +13,9 @@
     <string name="top_bar_simulation_title">simulations</string>
 
     <string name="banner_title">Dinh Minh Nguyen</string>
-    <string name="banner_profession">Master's Student in Visual Computing</string>
+    <string name="banner_profession">MSc in Visual Computing</string>
     <string name="banner_location">Oberkochen, Germany</string>
-    <string name="banner_interests">Graphics, Visualization, Simulation</string>
+    <string name="banner_interests">Computer Graphics, Visualization, Simulation</string>
 
     <string name="main_article_topic_svm_title">Support Vector Machine</string>
     <string name="main_article_topic_brdf_title">BRDF</string>

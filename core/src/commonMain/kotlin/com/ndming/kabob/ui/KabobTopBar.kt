@@ -45,7 +45,7 @@ fun KabobTopBar(
             // Light/dark mode button
             IconButton(
                 modifier = Modifier
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp, end = if (concise) 12.dp else 0.dp)
                     .pointerHoverIcon(PointerIcon.Hand),
                 onClick = {
                     onProfileChange(if (currentProfile == Profile.LIGHT) Profile.DARK else Profile.LIGHT)
@@ -65,21 +65,21 @@ fun KabobTopBar(
                 }
             }
 
-            // GitHub button
-            IconButton(
-                modifier = Modifier
-                    .pointerHoverIcon(PointerIcon.Hand)
-                    .padding(start = 12.dp, end = if (concise) 12.dp else 0.dp),
-                onClick = { window.open("https://github.com/ndming", "_blank") },
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.github),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-
             if (!concise) {
+                // GitHub button
+                IconButton(
+                    modifier = Modifier
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .padding(start = 12.dp),
+                    onClick = { window.open("https://github.com/ndming", "_blank") },
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.github),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
                 // LinkedIn button
                 IconButton(
                     modifier = Modifier

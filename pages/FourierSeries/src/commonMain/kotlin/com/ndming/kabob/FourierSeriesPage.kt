@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.fourierseries.generated.resources.Res
 import com.ndming.kabob.fourierseries.generated.resources.fs_top_bar_title
+import com.ndming.kabob.graphics.*
 import com.ndming.kabob.theme.Profile
 import com.ndming.kabob.ui.*
 import kotlinx.coroutines.CoroutineScope
@@ -291,11 +292,11 @@ private fun DrawScope.drawFourierScene(
         val currentAlpha = markers[i - 1].alpha
         drawSegment(color = segmentColor) {
             start = markers[i - 1].offset
-            end = markers[i].offset
+            end   = markers[i].offset
             alpha = currentAlpha
             width = 3.0f
             translate(-translateVector)
-            mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor)
+            toViewport(size, VIEWPORT_HALF_EXTENT / zoomFactor)
         }
         val alphaDecrease = fadingFactor * durationScale
         markers[i - 1] = markers[i - 1].copy(alpha = currentAlpha - alphaDecrease)
@@ -311,7 +312,7 @@ private fun DrawScope.drawFourierScene(
     drawCircle(
         color = arrowColor,
         radius = 5.0f,
-        center = (Offset.Zero - translateVector).mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor),
+        center = (Offset.Zero - translateVector).viewport(size, VIEWPORT_HALF_EXTENT / zoomFactor),
     )
 
     // Draw rotating arrows
@@ -321,7 +322,7 @@ private fun DrawScope.drawFourierScene(
             this.length = length
             rotate(radians)
             translate(-translateVector)
-            mapDrawSpace(size, VIEWPORT_HALF_EXTENT / zoomFactor)
+            toViewport(size, VIEWPORT_HALF_EXTENT / zoomFactor)
         }
     }
 }
