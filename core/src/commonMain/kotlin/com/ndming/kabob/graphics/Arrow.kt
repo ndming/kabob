@@ -26,7 +26,7 @@ class DrawArrowScope {
     var length: Float = 1.0f
         set(value) {
             field = value
-            head = origin + Offset(1.0f, 0.0f).scale(value)
+            head = origin + Offset(1.0f, 0.0f) * value
         }
 
     /**
@@ -45,7 +45,7 @@ class DrawArrowScope {
      * Rotates the arrow around its origin by a given angle in radians.
      */
     fun rotate(radians: Float) {
-        head = origin + Offset(1.0f, 0.0f).rotate(radians).scale(length)
+        head = origin + Offset(1.0f, 0.0f).rotate(radians) * length
     }
 
     /**
@@ -66,22 +66,27 @@ class DrawArrowScope {
     }
 }
 
-fun DrawScope.drawArrow(color: Color, withCircle: Boolean = true, block: DrawArrowScope.() -> Unit) {
+fun DrawScope.drawArrow(
+    color: Color,
+    withCircle: Boolean = true,
+    headRatio: Float = 0.2f,
+    block: DrawArrowScope.() -> Unit,
+) {
     val scope = DrawArrowScope().apply(block)
-    drawArrow(color, withCircle, scope)
+    drawArrow(color, withCircle, headRatio, scope)
 }
 
-private fun DrawScope.drawArrow(color: Color, withCircle: Boolean, scope: DrawArrowScope) {
+private fun DrawScope.drawArrow(color: Color, withCircle: Boolean, headRatio: Float, scope: DrawArrowScope) {
     val head = scope.head
     val tail = scope.tail
 
     val length = (head - tail).getDistance()
     val theta  = (head - tail).let { (x, y) -> atan2(y, x) }
 
-    val base = tail + UNIT_X.rotate(theta).scale(length * 0.8f)
+    val base = tail + UNIT_X.rotate(theta) * length * (1.0f - headRatio)
 
-    val p0 = base + UNIT_Y.rotate(theta).scale(length * 0.2f / 2.0f)
-    val p1 = p0 + UNIT_X.rotate(theta - PI.toFloat() / 2.0f).scale(length * 0.2f)
+    val p0 = base + UNIT_Y.rotate(theta) * (length * headRatio / 2.0f)
+    val p1 = p0 + UNIT_X.rotate(theta - PI.toFloat() / 2.0f) * length * headRatio
     val arrowHead = Path().apply {
         moveTo(p0.x, p0.y)
         lineTo(head.x, head.y)

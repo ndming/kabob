@@ -15,13 +15,8 @@ fun Offset.rotate(radians: Float) = Offset(
 )
 
 /**
- * Returns a new [Offset] as a result of scaling this offset's components by the specified [scalar].
- */
-fun Offset.scale(scalar: Float) = Offset(x * scalar, y * scalar)
-
-/**
  * Returns a new [Offset] as a result of mapping this offset from its local (object) space to view (camera) space.
- * The transform depends on the viewport's size and how much of the 2D plane that is visible within this viewport.
+ * The transform depends on the viewport's size and how much of the 2D plane visible within this viewport.
  *
  * @param size The size of the viewport (width, height) where this offset will be drawn. When the offset is to be used
  * within a [DrawScope], the [DrawScope.size] provides the precise dimensions for this parameter.
@@ -33,5 +28,5 @@ fun Offset.scale(scalar: Float) = Offset(x * scalar, y * scalar)
 fun Offset.viewport(size: Size, halfExtent: Float): Offset {
     val shortSide = if (size.width > size.height) size.height else size.width
     val scaleFactor = shortSide / 2.0f / halfExtent
-    return Offset(x, -y).scale(scaleFactor) + Offset(size.width / 2.0f, size.height / 2.0f)
+    return Offset(x, -y) * scaleFactor + Offset(size.width / 2.0f, size.height / 2.0f)
 }

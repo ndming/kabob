@@ -201,9 +201,9 @@ fun FourierSeriesPage(
                 // Drawable viewer in portrait mode
                 this@Column.AnimatedVisibility(
                     modifier = Modifier.align(Alignment.Center),
-                    visible = showPortraitDrawableViewer,
-                    enter = fadeIn(tween(400)),
-                    exit = fadeOut(tween(400)),
+                    visible  = showPortraitDrawableViewer,
+                    enter    = fadeIn(tween(400)),
+                    exit     = fadeOut(tween(400)),
                 ) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         DrawableViewer(
@@ -337,7 +337,7 @@ private fun List<Offset>.toSnapshotsAt(time: Float): Pair<List<Snapshot>, Offset
 
         snapshots.add(Snapshot(lastOffset, length, radians))
 
-        lastOffset += Offset(1.0f, 0.0f).scale(length).rotate(radians)
+        lastOffset += Offset(1.0f, 0.0f).rotate(radians) * length
     }
     return snapshots to lastOffset
 }

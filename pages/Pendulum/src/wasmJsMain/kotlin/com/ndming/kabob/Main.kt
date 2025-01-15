@@ -19,6 +19,10 @@ fun main() {
             PendulumPage(
                 uiState = uiState,
                 onProfileChange = pendulumViewModel::changeProfile,
+                onPendulumDrag  = pendulumViewModel::dragPendulum,
+                onAnimateSwing  = pendulumViewModel::animateSwing,
+                onArmLengthChange = pendulumViewModel::changeArmLength,
+                onFrictionChange  = pendulumViewModel::changeFriction,
             )
         }
     }

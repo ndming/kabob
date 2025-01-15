@@ -43,3 +43,8 @@ fun getJetBrainsMonoFamily() = FontFamily(
     Font(Res.font.jet_brains_mono_light, FontWeight.Light),
     Font(Res.font.jet_brains_mono_light_italic, FontWeight.Light, FontStyle.Italic),
 )
+
+@Composable
+fun getNotoSansMathFamily() = FontFamily(
+    Font(Res.font.noto_sans_math, FontWeight.Normal),
+)
