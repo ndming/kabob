@@ -165,7 +165,7 @@ fun PendulumPage(
             if (openSettingDialog) {
                 Dialog(onDismissRequest = { openSettingDialog = false }) {
                     Card {
-                        Column(modifier = Modifier.padding(horizontal = 32.dp)) {
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                             PendulumSettings(
                                 modifier = Modifier.padding(vertical = 32.dp),
                                 armLength = uiState.armLength,

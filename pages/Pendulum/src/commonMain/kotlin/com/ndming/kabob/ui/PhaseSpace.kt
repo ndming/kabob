@@ -73,7 +73,7 @@ fun PhaseSpace(
     )
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        val fontSizeFactor = size.width * 9e-4f
+        val fontSize = size.width * 2.16e-2f
 
         val xLabelOffsetFactor = size.width * 6e-4f
         val yLabelOffsetFactor = 1e3f / size.width
@@ -138,7 +138,7 @@ fun PhaseSpace(
             drawText(
                 textMeasurer = textMeasurer,
                 text = tickLabel,
-                style = tickStyle.copy(fontSize = tickStyle.fontSize * scaleFactor * fontSizeFactor),
+                style = tickStyle.copy(fontSize = (scaleFactor * fontSize).toSp()),
                 size = Size(100.0f, 30.0f),
                 topLeft = Offset(
                     x = tick - tickOffset * scaleFactor,
@@ -172,14 +172,14 @@ fun PhaseSpace(
             drawText(
                 textMeasurer = textMeasurer,
                 text = tickLabel,
-                style = tickStyle.copy(fontSize = tickStyle.fontSize * fontSizeFactor),
+                style = tickStyle.copy(fontSize = fontSize.toSp()),
                 size = Size(60.0f, 30.0f),
                 topLeft = Offset(-xLimit + 0.16f, tick + 0.16f * yLabelOffsetFactor).viewport(size, yLimit),
             )
             drawText(
                 textMeasurer = textMeasurer,
                 text = "\u2212" + tickLabel,
-                style = tickStyle.copy(fontSize = tickStyle.fontSize * fontSizeFactor),
+                style = tickStyle.copy(fontSize = fontSize.toSp()),
                 size = Size(60.0f, 30.0f),
                 topLeft = Offset(-xLimit + 0.16f, -tick + 0.16f * yLabelOffsetFactor).viewport(size, yLimit),
             )
@@ -191,14 +191,14 @@ fun PhaseSpace(
             textMeasurer = textMeasurer,
             topLeft = Offset(size.width - 50.0f * xLabelOffsetFactor, size.height / 2.0f + 10.0f * xLabelOffsetFactor),
             text = "\uD835\uDF03",
-            style = labelStyle.copy(fontSize = labelStyle.fontSize * fontSizeFactor),
+            style = labelStyle.copy(fontSize = (fontSize * 1.5f).toSp()),
         )
         // y-axis label
         drawText(
             textMeasurer = textMeasurer,
             topLeft = Offset(30.0f * xLabelOffsetFactor, 10.0f * xLabelOffsetFactor),
             text = "\uD835\uDF03'",
-            style = labelStyle.copy(fontSize = labelStyle.fontSize * fontSizeFactor),
+            style = labelStyle.copy(fontSize = (fontSize * 1.5f).toSp()),
         )
 
         // Pendulum state
