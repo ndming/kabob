@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -40,22 +41,26 @@ fun PhaseSpace(
 ) {
     val xLimit = (yLimit * viewportAspectRatio)
 
-    val xSamples = mk.arange<Float>(
-        start = (-xLimit + xCenter).fastRoundToInt() - 1,
-        stop = (xLimit + xCenter).fastRoundToInt() + 2,
-        step = SPACING.toDouble()
-    )
-    val ySamples = mk.arange<Float>(
-        start = -yLimit.fastRoundToInt(),
-        stop  = yLimit.fastRoundToInt() + 1,
-        step  = SPACING.toDouble()
-    )
+    val xSamples = remember(xLimit, xCenter) {
+        mk.arange<Float>(
+            start = (-xLimit + xCenter).fastRoundToInt() - 1,
+            stop = (xLimit + xCenter).fastRoundToInt() + 2,
+            step = SPACING.toDouble()
+        )
+    }
+    val ySamples = remember(yLimit) {
+        mk.arange<Float>(
+            start = -yLimit.fastRoundToInt(),
+            stop = yLimit.fastRoundToInt() + 1,
+            step = SPACING.toDouble()
+        )
+    }
 
     val xTickMultiplierMin = floor((-xLimit + xCenter) / PI.toFloat()).fastRoundToInt()
     val xTickMultiplierMax =  ceil(( xLimit + xCenter) / PI.toFloat()).fastRoundToInt()
     val xTickMultipliers = mk.arange<Float>(xTickMultiplierMin, xTickMultiplierMax + 1, 1.0)
 
-    val yTicks = mk.arange<Float>(1, yLimit.fastRoundToInt(), 1.0)
+    val yTicks = remember(yLimit) { mk.arange<Float>(1, yLimit.fastRoundToInt(), 1.0) }
 
     val arrowColor = MaterialTheme.colorScheme.tertiary
     val frameColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)

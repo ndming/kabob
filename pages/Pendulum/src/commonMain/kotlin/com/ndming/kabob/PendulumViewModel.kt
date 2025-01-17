@@ -6,9 +6,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.util.fastCoerceAtLeast
-import androidx.lifecycle.viewModelScope
 import com.ndming.kabob.theme.ThemeAwareViewModel
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.w3c.dom.events.Event
 import kotlin.math.*
-
-private fun windowHidden(): Boolean = js("document.hidden")
 
 data class PendulumUiState(
     val theta: Float = 0.0f,
@@ -52,19 +47,6 @@ class PendulumViewModel : ThemeAwareViewModel() {
         resetScale(scope)
     }
 
-    private val visibilityChangeCallback: (Event) -> Unit = {
-        if (windowHidden()) {
-            reset()
-        }
-    }
-
-    init {
-        // If the window loses focus, we reset the whole simulation. This is because the moment the window
-        // gains focus again, the delta time value will also include the amount of the window was not in focus.
-        // There's probably a way to combat this, but right now we will stick with an easy approach.
-        document.addEventListener("visibilitychange", visibilityChangeCallback)
-    }
-
     fun animateSwing(scope: CoroutineScope) {
         swingJob?.cancel()
         swingJob = scope.launch {
@@ -80,7 +62,7 @@ class PendulumViewModel : ThemeAwareViewModel() {
                 val thetaDoubleDot = getThetaDoubleDot(theta, thetaDot)
 
                 val now = withFrameNanos { it }
-                val deltaTime = (now - lastTime).toFloat() / 1_000_000_000f
+                val deltaTime = ((now - lastTime).toFloat() / 1_000_000_000f).takeIf { it <= DELTA_T  } ?: DELTA_T
                 lastTime = now
 
                 theta += thetaDot * deltaTime
@@ -160,26 +142,9 @@ class PendulumViewModel : ThemeAwareViewModel() {
         scaleMultiplier = 1.0f
     }
 
-    private fun reset() {
-        swingJob?.cancel()
-        swingJob = null
-
-        viewModelScope.launch {
-            scaleAnimator.snapTo(1.0f)
-            centerAnimator.snapTo(0.0f)
-        }
-
-        scaleMultiplier = 1.0f
-        _uiState.update { it.copy(theta = 0.0f, thetaDot = 0.0f, xCenter = 0.0f, yScale = 1.0f) }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        document.removeEventListener("visibilitychange", visibilityChangeCallback)
-    }
-
     companion object {
         private const val GRAVITY = 9.810f  // m/s^2
+        private const val DELTA_T = 0.016f  // ~60FPS
 
         const val PHASE_SPACE_VIEWPORT_HALF_EXTENT = 4.0f
     }
