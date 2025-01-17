@@ -23,6 +23,8 @@ fun MetaballsPage(
                 title = stringResource(Res.string.metaballs_top_bar_title),
                 onProfileChange = onProfileChange,
             )
+
+
         }
     }
 }

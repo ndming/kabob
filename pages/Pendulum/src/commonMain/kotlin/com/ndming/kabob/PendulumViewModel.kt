@@ -2,16 +2,25 @@ package com.ndming.kabob
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.util.fastCoerceAtLeast
+import androidx.lifecycle.viewModelScope
 import com.ndming.kabob.theme.ThemeAwareViewModel
-import kotlinx.coroutines.*
+import kotlinx.browser.document
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import org.w3c.dom.events.Event
 import kotlin.math.*
+
+private fun windowHidden(): Boolean = js("document.hidden")
 
 data class PendulumUiState(
     val theta: Float = 0.0f,
@@ -43,6 +52,19 @@ class PendulumViewModel : ThemeAwareViewModel() {
         resetScale(scope)
     }
 
+    private val visibilityChangeCallback: (Event) -> Unit = {
+        if (windowHidden()) {
+            reset()
+        }
+    }
+
+    init {
+        // If the window loses focus, we reset the whole simulation. This is because the moment the window
+        // gains focus again, the delta time value will also include the amount of the window was not in focus.
+        // There's probably a way to combat this, but right now we will stick with an easy approach.
+        document.addEventListener("visibilitychange", visibilityChangeCallback)
+    }
+
     fun animateSwing(scope: CoroutineScope) {
         swingJob?.cancel()
         swingJob = scope.launch {
@@ -51,18 +73,22 @@ class PendulumViewModel : ThemeAwareViewModel() {
             _uiState.update { it.copy(thetaDot = thetaDot) }
             velocityTracker.resetTracking()
 
+            var lastTime = withFrameNanos { it }
+
             while (isActive) {
                 var theta = _uiState.value.theta
                 val thetaDoubleDot = getThetaDoubleDot(theta, thetaDot)
 
-                theta += thetaDot * DELTA_T
-                thetaDot += thetaDoubleDot * DELTA_T
+                val now = withFrameNanos { it }
+                val deltaTime = (now - lastTime).toFloat() / 1_000_000_000f
+                lastTime = now
+
+                theta += thetaDot * deltaTime
+                thetaDot += thetaDoubleDot * deltaTime
 
                 _uiState.update { it.copy(theta = theta, thetaDot = thetaDot) }
                 updateCenter(scope)
                 updateScale(PHASE_SPACE_VIEWPORT_HALF_EXTENT, scope)
-
-                delay((DELTA_T * 1000).toLong())
             }
         }
     }
@@ -131,11 +157,29 @@ class PendulumViewModel : ThemeAwareViewModel() {
                 _uiState.update { it.copy(yScale = this.value) }
             }
         }
+        scaleMultiplier = 1.0f
+    }
+
+    private fun reset() {
+        swingJob?.cancel()
+        swingJob = null
+
+        viewModelScope.launch {
+            scaleAnimator.snapTo(1.0f)
+            centerAnimator.snapTo(0.0f)
+        }
+
+        scaleMultiplier = 1.0f
+        _uiState.update { it.copy(theta = 0.0f, thetaDot = 0.0f, xCenter = 0.0f, yScale = 1.0f) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        document.removeEventListener("visibilitychange", visibilityChangeCallback)
     }
 
     companion object {
         private const val GRAVITY = 9.810f  // m/s^2
-        private const val DELTA_T = 0.016f  // ~60 FPS
 
         const val PHASE_SPACE_VIEWPORT_HALF_EXTENT = 4.0f
     }
