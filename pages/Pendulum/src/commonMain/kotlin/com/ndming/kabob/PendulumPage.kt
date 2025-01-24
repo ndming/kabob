@@ -132,31 +132,30 @@ fun PendulumPage(
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween,
+                        verticalArrangement = Arrangement.SpaceAround,
                     ) {
-                        Surface {
-                            PhaseSpace(
-                                modifier  = Modifier.aspectRatio(PHASE_SPACE_VIEW_ASPECT_RATIO, false),
-                                armLength = uiState.armLength,
-                                friction  = uiState.friction,
-                                theta     = uiState.theta,
-                                thetaDot  = uiState.thetaDot,
-                                xCenter   = uiState.xCenter,
-                                yScale    = uiState.yScale,
-                                yLimit    = PendulumViewModel.PHASE_SPACE_VIEWPORT_HALF_EXTENT,
-                                viewportAspectRatio = PHASE_SPACE_VIEW_ASPECT_RATIO,
-                            )
-                        }
-
                         Pendulum(
-                            modifier = Modifier.padding(64.dp),
+                            modifier = Modifier.weight(1.0f, false).padding(64.dp),
                             theta  = uiState.theta,
-                            fillHeightFirst = ratio > 0.55f,
-                            showSettingButton = true,
+                            fillHeightFirst = ratio > 0.85f,
+                            showSettingButton = ratio > 0.85f,
                             onSettingButtonClick = { openSettingDialog = true },
                             onRelease = { onAnimateSwing(coroutineScope) },
                         ) { amount, uptime, armLengthPx ->
                             onPendulumDrag(amount, uptime, armLengthPx, coroutineScope)
+                        }
+
+                        if (ratio <= 0.85f) {
+                            PendulumSettings(
+                                modifier = Modifier
+                                    .weight(1.0f, false)
+                                    .padding(horizontal = 24.dp)
+                                    .padding(bottom = 16.dp, top = 32.dp),
+                                armLength = uiState.armLength,
+                                friction  = uiState.friction,
+                                onArmLengthChange = onArmLengthChange,
+                                onFrictionChange  = onFrictionChange,
+                            )
                         }
                     }
                 }
