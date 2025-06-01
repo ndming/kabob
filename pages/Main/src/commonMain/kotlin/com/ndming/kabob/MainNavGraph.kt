@@ -25,6 +25,7 @@ fun MainNavGraph(
     navController: NavHostController,
     startDestination: String,
     modifier: Modifier = Modifier,
+    portrait: Boolean = false,
 ) {
     NavHost(
         modifier = modifier.fillMaxSize(),
@@ -39,7 +40,7 @@ fun MainNavGraph(
             popEnterTransition = { fadeIn(tween(400)) },
             popExitTransition = { fadeOut(tween(200)) },
         ) {
-            HomeRoute()
+            HomeRoute(portrait = portrait)
         }
 
 //        composable(

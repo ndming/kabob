@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun HomeRoute(modifier: Modifier = Modifier) {
-    HomePage(modifier)
+fun HomeRoute(
+    modifier: Modifier = Modifier,
+    portrait: Boolean = false,
+) {
+    HomePage(portrait, modifier)
 }

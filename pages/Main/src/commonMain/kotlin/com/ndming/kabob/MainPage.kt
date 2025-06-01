@@ -6,8 +6,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.automirrored.filled.FormatIndentDecrease
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,6 +42,14 @@ fun MainPage(
     Surface(modifier = Modifier.fillMaxSize()) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             val portrait = maxWidth / maxHeight < 1.0f
+
+            // Close the portrait navigation panel when
+            // launching/switching to portrait mode
+            LaunchedEffect(portrait) {
+                if (portrait && !uiState.hideNavigation) {
+                    onHideNavRail(true)
+                }
+            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 // Top bar
@@ -81,6 +89,7 @@ fun MainPage(
                             modifier = Modifier.padding(top = 4.dp),
                             navController = navController,
                             startDestination = initialRoute,
+                            portrait = portrait,
                         )
                     }
 
@@ -184,7 +193,7 @@ private fun MainTopBarNavigationIcon(
                 contentEnter.togetherWith(contentExit)
             }
         ) { hideRail ->
-            Icon(if (hideRail) Icons.Default.Menu else Icons.Default.Close, null)
+            Icon(if (hideRail) Icons.Default.Menu else Icons.AutoMirrored.Filled.FormatIndentDecrease, null)
         }
     }
 }

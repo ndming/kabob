@@ -19,7 +19,7 @@ class MainViewModel : ThemeAwareViewModel() {
         ?.let { value -> MainRoute.entries.find { it.route == value } } ?: MainRoute.Home
 
     init {
-        val hideNavigation = window.sessionStorage.getItem(MAIN_NAV_RAIL_KEY)?.toBoolean() ?: true
+        val hideNavigation = window.sessionStorage.getItem(MAIN_NAV_RAIL_KEY)?.toBoolean() ?: false
         _uiState = MutableStateFlow(MainUiState(initialRoute, hideNavigation))
     }
 
