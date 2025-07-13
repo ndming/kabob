@@ -57,7 +57,6 @@ fun Gs2mPage(
                                     textAlign = TextAlign.Center,
                                     fontWeight = FontWeight.Medium,
                                 )
-
                             }
                         }
                     }
