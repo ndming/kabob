@@ -4,18 +4,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.theme.Profile
 import com.ndming.kabob.ui.KabobTopBar
+import com.ndming.kabob.ui.PaperAbstract
 import com.ndming.kabob.ui.PaperBanner
 import com.ndming.kabob.ui.PaperCover
 
@@ -24,6 +21,11 @@ fun Gs2mPage(
     uiState: Gs2mUiState,
     modifier: Modifier = Modifier,
     onProfileChange: (Profile) -> Unit = {},
+    onDtuViewerFrameRequest: (Int) -> ImageBitmap,
+    onDtuViewerSceneChange: (Int) -> Unit,
+    onShinyViewerFrameRequest: (Int) -> Pair<ImageBitmap, ImageBitmap>,
+    onShinyViewerSceneChange: (Int) -> Unit,
+    onShinyViewerPairedMapChange: (DecompositionMap) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -44,21 +46,23 @@ fun Gs2mPage(
                     ) {
                         PaperBanner()
 
-                        PaperCover(portrait)
+                        PaperCover(
+                            dtuViewerSceneIndex = uiState.dtuViewerSceneIndex,
+                            dtuViewerSceneState = uiState.dtuViewerSceneState,
+                            shinyViewerSceneIndex = uiState.shinyViewerSceneIndex,
+                            shinyViewerSceneState = uiState.shinyViewerSceneState,
+                            shinyViewerPairedMap = uiState.shinyViewerPairedMap,
+                            portrait = portrait,
+                            onDtuViewerFrameRequest = onDtuViewerFrameRequest,
+                            onDtuViewerSceneChange = onDtuViewerSceneChange,
+                            onShinyViewerFrameRequest = onShinyViewerFrameRequest,
+                            onShinyViewerSceneChange = onShinyViewerSceneChange,
+                            onShinyViewerPairedMapChange = onShinyViewerPairedMapChange,
+                        )
 
                         Spacer(modifier = Modifier.height(56.dp))
 
-                        Card(modifier = Modifier.widthIn(max = 1024.dp).fillMaxWidth().padding(24.dp)) {
-                            Column {
-                                Text(
-                                    text = "Abstract",
-                                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center,
-                                    fontWeight = FontWeight.Medium,
-                                )
-                            }
-                        }
+                        PaperAbstract()
                     }
                 }
             }

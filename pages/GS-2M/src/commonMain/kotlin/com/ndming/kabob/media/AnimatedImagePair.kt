@@ -8,14 +8,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Engineering
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.asComposeImageBitmap
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -24,33 +27,19 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.ndming.kabob.gs_2m.generated.resources.Res
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.Codec
-import org.jetbrains.skia.Data
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AnimatedImagePair(
-    filePathImgL: String,
-    filePathImgR: String,
-    fraction: Float,
+    loading: Boolean,
+    missing: Boolean,
+    contentDescriptionL: String?,
+    contentDescriptionR: String?,
     modifier: Modifier = Modifier,
     frameCount: Int = 200,
     frameDuration: Int = 1000 / 24,
-    onFractionChange: (Float) -> Unit,
+    onFrameRequest: (Int) -> Pair<ImageBitmap, ImageBitmap>,
 ) {
-    var bytesL by remember { mutableStateOf(ByteArray(0)) }
-    var bytesR by remember { mutableStateOf(ByteArray(0)) }
-
-    LaunchedEffect(filePathImgL) {
-        bytesL = Res.readBytes(filePathImgL)
-    }
-    LaunchedEffect(filePathImgR) {
-        bytesR = Res.readBytes(filePathImgR)
-    }
-
     val transition = rememberInfiniteTransition()
     val frameIndex by transition.animateValue(
         initialValue = 0,
@@ -67,35 +56,38 @@ fun AnimatedImagePair(
         )
     )
 
+    var fraction by remember { mutableStateOf(0.5f) }
     var boxWidth by remember { mutableStateOf(1f) }
 
-    if (bytesL.isNotEmpty() && bytesR.isNotEmpty()) {
-        val codecL = remember { Codec.makeFromData(Data.makeFromBytes(bytesL)) }
-        val codecR = remember { Codec.makeFromData(Data.makeFromBytes(bytesR)) }
-
-        val bitmapL = remember(codecL) { Bitmap().apply { allocPixels(codecL.imageInfo) } }
-        val bitmapR = remember(codecR) { Bitmap().apply { allocPixels(codecR.imageInfo) } }
-        remember(bitmapL, frameIndex) { codecL.readPixels(bitmapL, frameIndex) }
-        remember(bitmapR, frameIndex) { codecR.readPixels(bitmapR, frameIndex) }
-
+    if (loading) {
+        CircularProgressIndicator(modifier = modifier)
+    } else if (missing) {
+        Icon(
+            imageVector = Icons.Default.Engineering,
+            contentDescription = null,
+            modifier = modifier.size(64.dp),
+            tint = LocalContentColor.current.copy(alpha = 0.6f)
+        )
+    } else {
+        val (bitmapL, bitmapR) = onFrameRequest(frameIndex)
         Box(
             modifier = modifier
                 .onGloballyPositioned { boxWidth = it.size.width.toFloat() }
                 .onPointerEvent(PointerEventType.Move) { event ->
                     val position = event.changes.first().position
                     val width = boxWidth.coerceAtLeast(1f)
-                    onFractionChange((position.x / width).coerceIn(0f, 1f))
+                    fraction = (position.x / width).coerceIn(0f, 1f)
                 }
         ) {
             Image(
-                bitmap = bitmapR.asComposeImageBitmap(),
-                contentDescription = filePathImgR.substringAfter('/'),
+                bitmap = bitmapR,
+                contentDescription = contentDescriptionR,
                 modifier = Modifier.fillMaxSize()
             )
 
             Image(
-                bitmap = bitmapL.asComposeImageBitmap(),
-                contentDescription = filePathImgL.substringAfter('/'),
+                bitmap = bitmapL,
+                contentDescription = contentDescriptionL,
                 modifier = Modifier
                     .fillMaxSize()
                     .drawWithContent {

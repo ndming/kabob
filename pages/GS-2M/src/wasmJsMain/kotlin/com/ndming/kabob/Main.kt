@@ -25,6 +25,11 @@ fun main() {
             Gs2mPage(
                 uiState = uiState,
                 onProfileChange = gs2mViewModel::changeProfile,
+                onDtuViewerFrameRequest = gs2mViewModel::requestDtuViewerFrame,
+                onDtuViewerSceneChange = gs2mViewModel::changeDtuViewerScene,
+                onShinyViewerFrameRequest = gs2mViewModel::requestShinyViewerFrame,
+                onShinyViewerSceneChange = gs2mViewModel::changeShinyViewerScene,
+                onShinyViewerPairedMapChange = gs2mViewModel::changeShinyViewerPairedMap,
             )
         }
     }
