@@ -16,7 +16,7 @@
     <string name="banner_profession">MSc in Visual Computing</string>
     <string name="banner_location">Oberkochen, Germany</string>
 
-    <string name="home_overview_info">I conduct work and research in computer graphics, with an emphasis on ray-tracing and inverse rendering.</string>
+    <string name="home_overview_info">I’m currently pursuing a Master’s in Optics, Image, Vision, and Multimedia at the Norwegian University of Science and Technology. The program is constructed under the Erasmus COSI framework, specializing in computer graphics, image processing, and color science. My Master's thesis focuses on Gaussian splatting for accurate mesh reconstruction from multi-view images, conducted at Carl ZEISS AG in Germany. The work was supervised by Dr. Malte Avenhaus, Dr. Thomas Lindemeier, and academic advisor, Dr. Philippe Colantoni, from Université Jean-Monnet. During this time, I also contribute to the team's internal project, including the integration of ray-tracing for semi-transparent particles. Prior to my Master's, I hold a Bachelor’s in Computer Engineering from Ho Chi Minh City University of Technology, where I graduated with top honors and conducted research on 3D navigation systems using graphics rendering.</string>
     <string name="home_skill_tag_cpp">C/C++</string>
     <string name="home_skill_tag_vulkan">Vulkan</string>
     <string name="home_skill_tag_glsl">GLSL</string>

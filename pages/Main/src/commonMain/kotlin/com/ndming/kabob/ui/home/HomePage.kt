@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.main.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
@@ -52,9 +52,9 @@ fun HomePage(
 
             Text(
                 text = stringResource(Res.string.home_overview_info),
-                style = MaterialTheme.typography.bodyLarge,
-                fontStyle = FontStyle.Italic,
-                modifier = Modifier.padding(horizontal = 26.dp).padding(top = 24.dp, bottom = 12.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Justify,
+                modifier = Modifier.padding(horizontal = 26.dp).padding(top = 24.dp, bottom = 12.dp).widthIn(max = 1024.dp),
             )
 
             Row(modifier = Modifier.basicMarquee()) {
@@ -75,22 +75,15 @@ fun HomePage(
                 SectionItem(
                     modifier = Modifier.padding(top = 16.dp),
                     portrait = portrait,
-                    leadingText = "GPU Programming",
-                    trailingText = "implementation of parallel algorithms in compute shaders"
-                )
-
-                SectionItem(
-                    modifier = Modifier.padding(top = 16.dp),
-                    portrait = portrait,
-                    leadingText = "Image-based Rendering",
-                    trailingText = "Gaussian Splatting for surface reconstruction and scene decomposition"
-                )
-
-                SectionItem(
-                    modifier = Modifier.padding(top = 16.dp),
-                    portrait = portrait,
                     leadingText = "Neural Rendering",
-                    trailingText = "ray-traced image denoising and supersampling"
+                    trailingText = "3D reconstruction and scene decomposition from multi-view images"
+                )
+
+                SectionItem(
+                    modifier = Modifier.padding(top = 16.dp),
+                    portrait = portrait,
+                    leadingText = "Graphics Programming",
+                    trailingText = "implementation of graphics and parallel algorithms"
                 )
             }
 
@@ -104,15 +97,7 @@ fun HomePage(
                     portrait = portrait,
                     leadingText = "torpedo",
                     leadingLink = "https://github.com/ndming/torpedo",
-                    trailingText = "extensible Vulkan-based renderer",
-                )
-
-                SectionItem(
-                    modifier = Modifier.padding(top = 16.dp),
-                    portrait = portrait,
-                    leadingText = "pan",
-                    leadingLink = "https://github.com/ndming/pan",
-                    trailingText = "CLI tool for real-time HSI analysis",
+                    trailingText = "Vulkan-based renderer for semi-transparent particles",
                 )
 
                 SectionItem(
@@ -126,10 +111,18 @@ fun HomePage(
                 SectionItem(
                     modifier = Modifier.padding(top = 16.dp),
                     portrait = portrait,
-                    leadingText = "urgent",
-                    leadingLink = "https://github.com/ndming/remote-patient-monitoring",
-                    trailingText = "real-time remote medical monitoring",
+                    leadingText = "pan",
+                    leadingLink = "https://github.com/ndming/pan",
+                    trailingText = "CLI tool for real-time HSI analysis",
                 )
+
+//                SectionItem(
+//                    modifier = Modifier.padding(top = 16.dp),
+//                    portrait = portrait,
+//                    leadingText = "urgent",
+//                    leadingLink = "https://github.com/ndming/remote-patient-monitoring",
+//                    trailingText = "real-time remote medical monitoring",
+//                )
             }
         }
     }

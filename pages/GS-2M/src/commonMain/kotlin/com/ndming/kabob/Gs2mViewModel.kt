@@ -155,6 +155,6 @@ class Gs2mViewModel : ThemeAwareViewModel() {
 
     companion object {
         val DTU_SCENES = listOf(24, 37, 40, 55, 63, 65, 69, 83, 97, 105, 106, 110, 114, 118, 122)
-        val SHINY_SCENES = listOf("car", "coffee", "helmet", "teapot", "toaster", "ball")
+        val SHINY_SCENES = listOf("helmet", "car", "teapot", "ball", "coffee", "toaster")
     }
 }

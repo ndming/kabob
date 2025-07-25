@@ -54,6 +54,7 @@ fun PaperCover(
                 modifier = Modifier.fillMaxWidth(),
                 onFrameRequest = onDtuViewerFrameRequest,
                 onSceneChange = onDtuViewerSceneChange,
+                portrait = portrait,
             )
 
             Spacer(Modifier.height(56.dp))
@@ -82,6 +83,7 @@ fun PaperCover(
                     modifier = Modifier.width(480.dp),
                     onFrameRequest = onDtuViewerFrameRequest,
                     onSceneChange = onDtuViewerSceneChange,
+                    portrait = portrait,
                 )
                 Spacer(Modifier.width(48.dp))
             }
@@ -108,6 +110,7 @@ fun PaperCover(
 private fun DtuViewer(
     sceneIndex: Int,
     sceneState: AnimatedImageState,
+    portrait: Boolean,
     modifier: Modifier = Modifier,
     onFrameRequest: (Int) -> ImageBitmap,
     onSceneChange: (Int) -> Unit,
@@ -144,6 +147,7 @@ private fun DtuViewer(
             onSwitchL = { onSceneChange(if (sceneIndex == 0) DTU_SCENES.lastIndex else sceneIndex - 1) },
             onSwitchR = { onSceneChange((sceneIndex + 1) % DTU_SCENES.size) },
             fontFamily = monoFamily,
+            portrait = portrait,
         )
     }
 }
@@ -206,6 +210,7 @@ private fun ShinyViewer(
             onSwitchL = { onSceneChange(if (sceneIndex == 0) SHINY_SCENES.lastIndex else sceneIndex - 1) },
             onSwitchR = { onSceneChange((sceneIndex + 1) % SHINY_SCENES.size) },
             fontFamily = monoFamily,
+            portrait = portrait,
         )
     }
 }
@@ -214,6 +219,7 @@ private fun ShinyViewer(
 private fun Switcher(
     sceneName: String,
     fontFamily: FontFamily,
+    portrait: Boolean,
     modifier: Modifier = Modifier,
     onSwitchL: () -> Unit,
     onSwitchR: () -> Unit,
@@ -223,8 +229,17 @@ private fun Switcher(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row {
-            Spacer(Modifier.width(72.dp))
+        if (!portrait) {
+            Row {
+                Spacer(Modifier.width(72.dp))
+                FilledTonalButton(
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                    onClick = onSwitchL,
+                ) {
+                    Icon(Icons.Default.SwitchLeft,null)
+                }
+            }
+        } else {
             FilledTonalButton(
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 onClick = onSwitchL,
@@ -251,14 +266,23 @@ private fun Switcher(
             )
         }
 
-        Row {
+        if (!portrait) {
+            Row {
+                FilledTonalButton(
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                    onClick = onSwitchR,
+                ) {
+                    Icon(Icons.Default.SwitchRight,null)
+                }
+                Spacer(Modifier.width(72.dp))
+            }
+        } else {
             FilledTonalButton(
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 onClick = onSwitchR,
             ) {
                 Icon(Icons.Default.SwitchRight,null)
             }
-            Spacer(Modifier.width(72.dp))
         }
     }
 }
