@@ -1,22 +1,17 @@
 package com.ndming.kabob.ui
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.DisableSelection
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SwitchLeft
-import androidx.compose.material.icons.filled.SwitchRight
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.AnimatedImageState
 import com.ndming.kabob.DecompositionMap
@@ -122,15 +117,6 @@ private fun DtuViewer(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(modifier = Modifier.fillMaxWidth().aspectRatio(1.0f)) {
-            @Suppress("HttpUrlsUsage")
-            HyperlinkText(
-                linkText = "DTU",
-                linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
-                prefix = "Reconstruction on the ",
-                suffix = " dataset",
-                modifier = Modifier.align(Alignment.TopCenter).padding(top = 32.dp),
-            )
-
             AnimatedImage(
                 modifier = Modifier.align(Alignment.Center),
                 loading = sceneState.loading,
@@ -139,6 +125,16 @@ private fun DtuViewer(
                 onFrameRequest = onFrameRequest,
             )
         }
+
+        Spacer(Modifier.height(16.dp))
+
+        @Suppress("HttpUrlsUsage")
+        HyperlinkText(
+            linkText = "DTU",
+            linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
+            prefix = "Reconstruction on the ",
+            suffix = " dataset",
+        )
 
         Spacer(Modifier.height(16.dp))
 
@@ -170,14 +166,6 @@ private fun ShinyViewer(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier.fillMaxWidth().aspectRatio(1.0f)) {
-            HyperlinkText(
-                linkText = "ShinyBlender",
-                linkUrl = "https://dorverbin.github.io/refnerf/",
-                prefix = "Decomposition on the ",
-                suffix = " dataset",
-                modifier = Modifier.align(Alignment.TopCenter).padding(top = 32.dp),
-            )
-
             AnimatedImagePair(
                 modifier = Modifier.padding(32.dp).align(Alignment.Center),
                 loading = sceneState.loading,
@@ -205,6 +193,15 @@ private fun ShinyViewer(
 
         Spacer(Modifier.height(16.dp))
 
+        HyperlinkText(
+            linkText = "ShinyBlender",
+            linkUrl = "https://dorverbin.github.io/refnerf/",
+            prefix = if (!portrait) "Decomposition on the " else "Decomposition on ",
+            suffix = if (!portrait) " dataset" else "",
+        )
+
+        Spacer(Modifier.height(16.dp))
+
         Switcher(
             sceneName = SHINY_SCENES[sceneIndex],
             onSwitchL = { onSceneChange(if (sceneIndex == 0) SHINY_SCENES.lastIndex else sceneIndex - 1) },
@@ -212,77 +209,5 @@ private fun ShinyViewer(
             fontFamily = monoFamily,
             portrait = portrait,
         )
-    }
-}
-
-@Composable
-private fun Switcher(
-    sceneName: String,
-    fontFamily: FontFamily,
-    portrait: Boolean,
-    modifier: Modifier = Modifier,
-    onSwitchL: () -> Unit,
-    onSwitchR: () -> Unit,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        if (!portrait) {
-            Row {
-                Spacer(Modifier.width(72.dp))
-                FilledTonalButton(
-                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                    onClick = onSwitchL,
-                ) {
-                    Icon(Icons.Default.SwitchLeft,null)
-                }
-            }
-        } else {
-            FilledTonalButton(
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                onClick = onSwitchL,
-            ) {
-                Icon(Icons.Default.SwitchLeft,null)
-            }
-        }
-
-        AnimatedContent(
-            targetState = sceneName,
-            contentAlignment = Alignment.Center,
-            transitionSpec = {
-                val contentEnter = fadeIn(tween(800)) + slideInVertically(tween(600)) { -it / 2 }
-                val contentExit = fadeOut(tween(200)) + slideOutVertically(tween(400)) { it / 2 }
-                contentEnter.togetherWith(contentExit)
-            },
-        ) { name ->
-            Text(
-                text = name,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-
-        if (!portrait) {
-            Row {
-                FilledTonalButton(
-                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                    onClick = onSwitchR,
-                ) {
-                    Icon(Icons.Default.SwitchRight,null)
-                }
-                Spacer(Modifier.width(72.dp))
-            }
-        } else {
-            FilledTonalButton(
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                onClick = onSwitchR,
-            ) {
-                Icon(Icons.Default.SwitchRight,null)
-            }
-        }
     }
 }

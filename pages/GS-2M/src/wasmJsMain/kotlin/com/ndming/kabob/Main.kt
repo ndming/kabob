@@ -30,6 +30,9 @@ fun main() {
                 onShinyViewerFrameRequest = gs2mViewModel::requestShinyViewerFrame,
                 onShinyViewerSceneChange = gs2mViewModel::changeShinyViewerScene,
                 onShinyViewerPairedMapChange = gs2mViewModel::changeShinyViewerPairedMap,
+                onShinyMeshFrameRequest = gs2mViewModel::requestShinyMeshFrame,
+                onShinyMeshSceneChange = gs2mViewModel::changeShinyMeshScene,
+                onShinyMeshPairedMethodChange = gs2mViewModel::changeShinyMeshPairedMethod,
             )
         }
     }

@@ -56,26 +56,4 @@ fun AnimatedImage(
             modifier = modifier,
         )
     }
-
-//    if (bytes.isNotEmpty()) {
-//        val codec = remember(bytes) { Codec.makeFromData(Data.makeFromBytes(bytes)) }
-//
-//        val bitmap = remember(codec) { Bitmap().apply { allocPixels(codec.imageInfo) } }
-//        remember(bitmap, frameIndex) { codec.readPixels(bitmap, frameIndex) }
-//
-//        Image(
-//            bitmap = bitmap.asComposeImageBitmap(),
-//            contentDescription = filePath.substringAfter('/'),
-//            modifier = modifier,
-//        )
-//    } else if (missing) {
-//        Icon(
-//            imageVector = Icons.Default.Engineering,
-//            contentDescription = null,
-//            modifier = Modifier.size(64.dp),
-//            tint = LocalContentColor.current.copy(alpha = 0.6f)
-//        )
-//    } else {
-//        CircularProgressIndicator()
-//    }
 }
