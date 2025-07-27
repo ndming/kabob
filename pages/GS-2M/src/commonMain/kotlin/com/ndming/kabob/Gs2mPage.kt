@@ -69,7 +69,7 @@ fun Gs2mPage(
                         Spacer(modifier = Modifier.height(48.dp))
 
                         if (!portrait) {
-                            Text(text = "Mesh reconstruction: qualitative comparison between GS-2M and SoTA neural- and 3DGS-based methods.")
+                            Text(text = "Mesh reconstruction: quantitative comparison between GS-2M and SoTA neural- and 3DGS-based methods.")
 
                             @Suppress("HttpUrlsUsage")
                             HyperlinkText(
@@ -93,7 +93,7 @@ fun Gs2mPage(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        QualitativeChamfer(chamfer = uiState.chamfer)
+                        DtuQuantitativeChamfer(chamfer = uiState.chamfer)
 
                         Spacer(modifier = Modifier.height(56.dp))
 
@@ -133,7 +133,36 @@ fun Gs2mPage(
                             onPairedMethodChange = onShinyMeshPairedMethodChange,
                         )
 
-                        Spacer(modifier = Modifier.height(48.dp))
+                        Spacer(modifier = Modifier.height(64.dp))
+
+                        if (!portrait) {
+                            Text(text = "NVS: quantitative comparison between GS-2M and SoTA reconstruction methods.")
+
+                            @Suppress("HttpUrlsUsage")
+                            HyperlinkText(
+                                linkText = "DTU",
+                                linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
+                                prefix = "We report the Peak Signal-to-Noise Ratio (PSNR) for each scan of the 15 scenes in the ",
+                                suffix = " dataset.",
+                            )
+                        } else {
+                            Text(text = "Quantitative comparison with SoTA")
+                            Text(text = "reconstruction methods. The Peak")
+                            Text(text = "Signal-to-Noise Ratio (PSNR) is reported")
+                            @Suppress("HttpUrlsUsage")
+                            HyperlinkText(
+                                linkText = "DTU",
+                                linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
+                                prefix = "for 15 scenes in the ",
+                                suffix = " dataset.",
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        DtuQuantitativeNvs(psnr = uiState.psnr)
+
+                        Spacer(modifier = Modifier.height(56.dp))
                     }
                 }
             }

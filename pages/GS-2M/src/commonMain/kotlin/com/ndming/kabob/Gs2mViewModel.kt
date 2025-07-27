@@ -42,7 +42,8 @@ data class Gs2mUiState(
     val shinyMeshSceneIndex: Int = 0,
     val shinyMeshSceneState: AnimatedImageState = AnimatedImageState(),
     val shinyMeshPairedMethod: ReconstructionMethod = ReconstructionMethod.PGSR,
-    val chamfer: Chamfer = Chamfer(),
+    val chamfer: DtuQuantitativeData = DtuQuantitativeData(),
+    val psnr: DtuQuantitativeData = DtuQuantitativeData(),
 )
 
 data class AnimatedImageData(
@@ -63,7 +64,7 @@ data class AnimatedImageState(
 )
 
 @Serializable
-data class Chamfer(
+data class DtuQuantitativeData(
     val scan24: List<Float> = emptyList(),
     val scan37: List<Float> = emptyList(),
     val scan40: List<Float> = emptyList(),
@@ -265,11 +266,26 @@ class Gs2mViewModel : ThemeAwareViewModel() {
             }
 
             val chamfer = if (bytes.isNotEmpty()) {
-                Json.decodeFromString<Chamfer>(bytes.decodeToString())
+                Json.decodeFromString<DtuQuantitativeData>(bytes.decodeToString())
             } else {
-                Chamfer()
+                DtuQuantitativeData()
             }
             _uiState.update { it.copy(chamfer = chamfer) }
+        }
+
+        viewModelScope.launch {
+            val bytes = try {
+                Res.readBytes("files/dtu/psnr.json")
+            } catch (_: MissingResourceException) {
+                ByteArray(0)
+            }
+
+            val psnr = if (bytes.isNotEmpty()) {
+                Json.decodeFromString<DtuQuantitativeData>(bytes.decodeToString())
+            } else {
+                DtuQuantitativeData()
+            }
+            _uiState.update { it.copy(psnr = psnr) }
         }
     }
 
