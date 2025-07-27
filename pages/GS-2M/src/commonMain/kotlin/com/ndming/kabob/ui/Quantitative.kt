@@ -1,0 +1,389 @@
+package com.ndming.kabob.ui
+
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.South
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import com.ndming.kabob.Chamfer
+import com.ndming.kabob.markup.HyperlinkText
+import com.ndming.kabob.theme.getJetBrainsMonoFamily
+
+enum class NerfMethod(val prefix: String, val link: String) {
+    VolSDF("VolSDF", "https://lioryariv.github.io/volsdf"),
+    NeuS("NeuS", "https://lingjie0206.github.io/papers/NeuS"),
+    RegSDF("RegSDF", "https://machinelearning.apple.com/research/critical-regularizations"),
+    NeuS2("NeuS2", "https://vcai.mpi-inf.mpg.de/projects/NeuS2"),
+    NeuralWarp("NeuralWarp", "https://imagine.enpc.fr/~darmonf/NeuralWarp"),
+    Neuralangelo("Neuralangelo", "https://research.nvidia.com/labs/dir/neuralangelo"),
+}
+
+@Suppress("SpellCheckingInspection")
+enum class GsMethod(val prefix: String, val link: String) {
+    SuGaR("SuGaR", "https://anttwo.github.io/sugar"),
+    GaussianSurfels("GaussianSurfels", "https://turandai.github.io/projects/gaussian_surfels"),
+    GS2D("2DGS", "https://surfsplatting.github.io"),
+    GOF("GOF", "https://niujinshuchong.github.io/gaussian-opacity-fields"),
+    PlanarGS("PGSR", "https://zju3dv.github.io/pgsr"),
+    GaussSurf("GausSurf", "https://jiepengwang.github.io/GausSurf")
+}
+
+enum class Rank(val code: String) {
+    First("1st"),
+    Second("2nd"),
+    Third("3rd"),
+    None("Rest"),
+}
+
+@Composable
+fun QualitativeChamfer(
+    chamfer: Chamfer,
+    portrait: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val monoFamily = getJetBrainsMonoFamily()
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(modifier = modifier.padding(horizontal = 24.dp)) {
+            ChamferHeaderColumn()
+
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                ChamferValueColumn(
+                    scanID = "24",
+                    values = chamfer.scan24,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "37",
+                    values = chamfer.scan37,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "40",
+                    values = chamfer.scan40,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "55",
+                    values = chamfer.scan55,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "63",
+                    values = chamfer.scan63,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "65",
+                    values = chamfer.scan65,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "69",
+                    values = chamfer.scan69,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "83",
+                    values = chamfer.scan83,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "97",
+                    values = chamfer.scan97,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "105",
+                    values = chamfer.scan105,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "106",
+                    values = chamfer.scan106,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "110",
+                    values = chamfer.scan110,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "114",
+                    values = chamfer.scan114,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "118",
+                    values = chamfer.scan118,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "122",
+                    values = chamfer.scan122,
+                    fontFamily = monoFamily,
+                )
+
+                ChamferValueColumn(
+                    scanID = "Mean",
+                    values = chamfer.mean,
+                    fontFamily = monoFamily,
+                )
+            }
+        }
+
+        RankCode(fontFamily = monoFamily, modifier = Modifier.padding(vertical = 16.dp))
+    }
+}
+
+@Composable
+private fun ChamferHeaderColumn(modifier: Modifier = Modifier) {
+    ChamferColumn(
+        modifier = modifier,
+        headlineRow = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                Text(
+                    text = "CD",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Icon(
+                    imageVector = Icons.Default.South,
+                    contentDescription = null,
+                )
+            }
+        },
+        nerfRow = {
+            NerfMethod.entries.forEach { method ->
+                HyperlinkText(
+                    linkText = method.prefix,
+                    linkUrl = method.link,
+                    prefix = "",
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        },
+        gsRow = {
+            GsMethod.entries.forEach { method ->
+                HyperlinkText(
+                    linkText = method.prefix,
+                    linkUrl = method.link,
+                    prefix = "",
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        },
+        ourRow = {
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Ours")
+                    }
+                    append(" w/o BRDF")
+                }
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = "Ours",
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    )
+}
+
+@Composable
+private fun ChamferValueColumn(
+    scanID: String,
+    values: List<Float>,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier,
+) {
+    val rankedValues = if (values.isNotEmpty()) values.asRankedList() else emptyList()
+
+    ChamferColumn(
+        align = true,
+        modifier = modifier,
+        headlineRow = {
+            Text(
+                text = scanID, style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+        },
+        nerfRow = {
+            if (rankedValues.isNotEmpty()) {
+                rankedValues.subList(0, NerfMethod.entries.size).forEach { (value, rank) ->
+                    Spacer(Modifier.height(9.dp))
+                    RankedText(
+                        text = formatFloat(value, 2),
+                        rank = rank,
+                        fontFamily = fontFamily,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        },
+        gsRow = {
+            if (rankedValues.isNotEmpty()) {
+                rankedValues.subList(NerfMethod.entries.size, NerfMethod.entries.size + GsMethod.entries.size).forEach { (value, rank) ->
+                    Spacer(Modifier.height(9.dp))
+                    RankedText(
+                        text = formatFloat(value, 2),
+                        rank = rank,
+                        fontFamily = fontFamily,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        },
+        ourRow = {
+            if (rankedValues.isNotEmpty()) {
+                rankedValues.subList(NerfMethod.entries.size + GsMethod.entries.size, values.size).forEach { (value, rank) ->
+                    Spacer(Modifier.height(8.dp))
+                    RankedText(
+                        text = formatFloat(value, 2),
+                        rank = rank,
+                        fontFamily = fontFamily,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        },
+    )
+}
+
+@Composable
+private fun ChamferColumn(
+    align: Boolean = false,
+    modifier: Modifier = Modifier,
+    headlineRow: @Composable () -> Unit,
+    nerfRow: @Composable () -> Unit,
+    gsRow: @Composable () -> Unit,
+    ourRow: @Composable () -> Unit,
+) {
+    Column(
+        modifier = modifier.width(IntrinsicSize.Min),
+        horizontalAlignment = if (align) Alignment.CenterHorizontally else Alignment.Start,
+    ) {
+        HorizontalDivider(thickness = 4.dp, color = MaterialTheme.colorScheme.primaryContainer)
+
+        headlineRow()
+
+        HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.primaryContainer)
+
+        nerfRow()
+
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+            thickness = 2.dp, color = MaterialTheme.colorScheme.primaryContainer)
+
+        gsRow()
+
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+            thickness = 2.dp, color = MaterialTheme.colorScheme.primaryContainer)
+
+        ourRow()
+
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+            thickness = 4.dp, color = MaterialTheme.colorScheme.primaryContainer)
+    }
+}
+
+@Composable
+private fun RankedText(
+    text: String,
+    rank: Rank,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        fontFamily = fontFamily,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = if (rank == Rank.None) FontWeight.Normal else FontWeight.Bold,
+        color = rank.getColor(),
+    )
+}
+
+@Composable
+private fun RankCode(
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Rank.entries.forEach { rank ->
+            Text(
+                text = rank.code,
+                modifier = Modifier.padding(end = 16.dp),
+                fontFamily = fontFamily,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = if (rank == Rank.None) FontWeight.Normal else FontWeight.Bold,
+                color = rank.getColor(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun Rank.getColor() = when (this) {
+    Rank.First -> MaterialTheme.colorScheme.tertiary
+    Rank.Second -> MaterialTheme.colorScheme.primary
+    Rank.Third -> MaterialTheme.colorScheme.onSurface
+    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+}
+
+@Suppress("UNUSED_PARAMETER")
+private fun formatFloat(value: Float, decimals: Int): String = js("value.toFixed(decimals)")
+
+private fun List<Float>.asRankedList(): List<Pair<Float, Rank>> {
+    val topThreeMap = this
+        .distinct()
+        .sorted()
+        .take(3)
+        .mapIndexed { index, value ->
+            val rank = when (index) {
+                0 -> Rank.First
+                1 -> Rank.Second
+                else -> Rank.Third
+            }
+            value to rank
+        }.toMap()
+    return this.map { value -> value to (topThreeMap[value] ?: Rank.None) }
+}

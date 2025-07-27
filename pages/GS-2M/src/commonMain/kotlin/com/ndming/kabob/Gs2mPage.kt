@@ -68,10 +68,40 @@ fun Gs2mPage(
 
                         Spacer(modifier = Modifier.height(48.dp))
 
-                        if (portrait) {
-                            Text(
-                                text = "Compare GS-2M and SoTA methods on"
+                        if (!portrait) {
+                            Text(text = "Mesh reconstruction: qualitative comparison between GS-2M and SoTA neural- and 3DGS-based methods.")
+
+                            @Suppress("HttpUrlsUsage")
+                            HyperlinkText(
+                                linkText = "DTU",
+                                linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
+                                prefix = "We report the Chamfer Distance (CD) for each scan of the 15 scenes in the ",
+                                suffix = " dataset.",
                             )
+                        } else {
+                            Text(text = "Quantitative comparison with SoTA")
+                            Text(text = "neural-based and 3DGS-based methods.")
+                            Text(text = "The Chamfer Distance (CD) is reported")
+                            @Suppress("HttpUrlsUsage")
+                            HyperlinkText(
+                                linkText = "DTU",
+                                linkUrl = "http://roboimagedata.compute.dtu.dk/?page_id=36",
+                                prefix = "for 15 scenes in the ",
+                                suffix = " dataset.",
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        QualitativeChamfer(
+                            chamfer = uiState.chamfer,
+                            portrait = portrait,
+                        )
+
+                        Spacer(modifier = Modifier.height(56.dp))
+
+                        if (portrait) {
+                            Text(text = "Compare GS-2M with SoTA methods on")
 
                             HyperlinkText(
                                 linkText = "ShinyBlender",
@@ -83,8 +113,8 @@ fun Gs2mPage(
                             HyperlinkText(
                                 linkText = "ShinyBlender",
                                 linkUrl = "https://dorverbin.github.io/refnerf/",
-                                prefix = "Compare the reconstructed meshes of GS-2M and SoTA methods. Dataset:  ",
-                                suffix = " synthetic.",
+                                prefix = "Compare the reconstructed meshes of GS-2M with SoTA methods for the  ",
+                                suffix = " synthetic dataset.",
                             )
 
                             @Suppress("HttpUrlsUsage")

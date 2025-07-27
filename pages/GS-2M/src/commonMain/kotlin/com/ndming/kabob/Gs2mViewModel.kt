@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.MissingResourceException
 import org.jetbrains.skia.Bitmap
@@ -40,6 +42,7 @@ data class Gs2mUiState(
     val shinyMeshSceneIndex: Int = 0,
     val shinyMeshSceneState: AnimatedImageState = AnimatedImageState(),
     val shinyMeshPairedMethod: ReconstructionMethod = ReconstructionMethod.PGSR,
+    val chamfer: Chamfer = Chamfer(),
 )
 
 data class AnimatedImageData(
@@ -59,6 +62,27 @@ data class AnimatedImageState(
     val missing: Boolean = false,
 )
 
+@Serializable
+data class Chamfer(
+    val scan24: List<Float> = emptyList(),
+    val scan37: List<Float> = emptyList(),
+    val scan40: List<Float> = emptyList(),
+    val scan55: List<Float> = emptyList(),
+    val scan63: List<Float> = emptyList(),
+    val scan65: List<Float> = emptyList(),
+    val scan69: List<Float> = emptyList(),
+    val scan83: List<Float> = emptyList(),
+    val scan97: List<Float> = emptyList(),
+    val scan105: List<Float> = emptyList(),
+    val scan106: List<Float> = emptyList(),
+    val scan110: List<Float> = emptyList(),
+    val scan114: List<Float> = emptyList(),
+    val scan118: List<Float> = emptyList(),
+    val scan122: List<Float> = emptyList(),
+    val mean: List<Float> = emptyList(),
+)
+
+@OptIn(ExperimentalResourceApi::class)
 class Gs2mViewModel : ThemeAwareViewModel() {
     private val _uiState = MutableStateFlow(Gs2mUiState())
     val uiState: StateFlow<Gs2mUiState> = _uiState.asStateFlow()
@@ -231,6 +255,24 @@ class Gs2mViewModel : ThemeAwareViewModel() {
         val bitmapR = Bitmap().apply { allocPixels(codecL.imageInfo) }
         return AnimatedImagePairData(codecL, codecs, bitmapL, bitmapR)
     }
+
+    init {
+        viewModelScope.launch {
+            val bytes = try {
+                Res.readBytes("files/dtu/chamfer.json")
+            } catch (_: MissingResourceException) {
+                ByteArray(0)
+            }
+
+            val chamfer = if (bytes.isNotEmpty()) {
+                Json.decodeFromString<Chamfer>(bytes.decodeToString())
+            } else {
+                Chamfer()
+            }
+            _uiState.update { it.copy(chamfer = chamfer) }
+        }
+    }
+
 
     companion object {
         val DTU_SCENES = listOf(24, 37, 40, 55, 63, 65, 69, 83, 97, 105, 106, 110, 114, 118, 122)

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "com.ndming.kabob"
@@ -38,6 +39,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -45,9 +47,12 @@ kotlin {
             implementation(compose.animation)
             implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
+
             implementation(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.navigation.compose)
+
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }
