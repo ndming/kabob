@@ -93,10 +93,7 @@ fun Gs2mPage(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        QualitativeChamfer(
-                            chamfer = uiState.chamfer,
-                            portrait = portrait,
-                        )
+                        QualitativeChamfer(chamfer = uiState.chamfer)
 
                         Spacer(modifier = Modifier.height(56.dp))
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.ndming.kabob.Chamfer
 import com.ndming.kabob.markup.HyperlinkText
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
+import kotlin.math.round
 
 enum class NerfMethod(val prefix: String, val link: String) {
     VolSDF("VolSDF", "https://lioryariv.github.io/volsdf"),
@@ -51,7 +52,6 @@ enum class Rank(val code: String) {
 @Composable
 fun QualitativeChamfer(
     chamfer: Chamfer,
-    portrait: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val monoFamily = getJetBrainsMonoFamily()
@@ -246,7 +246,7 @@ private fun ChamferValueColumn(
                 rankedValues.subList(0, NerfMethod.entries.size).forEach { (value, rank) ->
                     Spacer(Modifier.height(9.dp))
                     RankedText(
-                        text = formatFloat(value, 2),
+                        text = value.format(),
                         rank = rank,
                         fontFamily = fontFamily,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -259,7 +259,7 @@ private fun ChamferValueColumn(
                 rankedValues.subList(NerfMethod.entries.size, NerfMethod.entries.size + GsMethod.entries.size).forEach { (value, rank) ->
                     Spacer(Modifier.height(9.dp))
                     RankedText(
-                        text = formatFloat(value, 2),
+                        text = value.format(),
                         rank = rank,
                         fontFamily = fontFamily,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -272,7 +272,7 @@ private fun ChamferValueColumn(
                 rankedValues.subList(NerfMethod.entries.size + GsMethod.entries.size, values.size).forEach { (value, rank) ->
                     Spacer(Modifier.height(8.dp))
                     RankedText(
-                        text = formatFloat(value, 2),
+                        text = value.format(),
                         rank = rank,
                         fontFamily = fontFamily,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -369,8 +369,12 @@ private fun Rank.getColor() = when (this) {
     else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
 }
 
-@Suppress("UNUSED_PARAMETER")
-private fun formatFloat(value: Float, decimals: Int): String = js("value.toFixed(decimals)")
+private fun Float.format(): String {
+    val num = round(this * 100).toString().split('.')[0]
+    val prefix = num.dropLast(2).takeIf { it.isNotEmpty() } ?: "0"
+    val suffix = num.takeLast(2)
+    return "$prefix.$suffix"
+}
 
 private fun List<Float>.asRankedList(): List<Pair<Float, Rank>> {
     val topThreeMap = this
