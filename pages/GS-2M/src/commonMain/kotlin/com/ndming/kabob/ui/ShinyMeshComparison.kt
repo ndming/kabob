@@ -1,6 +1,5 @@
 package com.ndming.kabob.ui
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -8,10 +7,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PauseCircle
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -27,40 +28,25 @@ import com.ndming.kabob.Gs2mViewModel.Companion.SHINY_MESHES
 import com.ndming.kabob.ReconstructionMethod
 import com.ndming.kabob.media.ImagePair
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun ShinyMeshComparison(
+    bitmapGT: ImageBitmap?,
+    bitmapL: ImageBitmap?,
+    bitmapR: ImageBitmap?,
     sceneIndex: Int,
     sceneState: AnimatedImageState,
     pairedMethod: ReconstructionMethod,
+    playing: Boolean,
     portrait: Boolean,
     modifier: Modifier = Modifier,
-    onFrameRequest: (Int) -> Triple<ImageBitmap, ImageBitmap, ImageBitmap>,
     onSceneChange: (Int) -> Unit,
     onPairedMethodChange: (ReconstructionMethod) -> Unit,
+    onPlayingChange: (Boolean, CoroutineScope) -> Unit,
 ) {
-    val transition = rememberInfiniteTransition()
-    val frameIndex by transition.animateValue(
-        initialValue = 0,
-        targetValue = 200 - 1,
-        typeConverter = Int.VectorConverter,
-        animationSpec = infiniteRepeatable(
-            keyframes {
-                durationMillis = 0
-                repeat(200) {
-                    it at durationMillis
-                    durationMillis += (1000 / 24)
-                }
-            }
-        )
-    )
-
+    val coroutineScope = rememberCoroutineScope()
     val extra = !sceneState.loading && !sceneState.missing && !portrait
-    val (bitmapGT, bitmapL, bitmapR) = if (!sceneState.loading && !sceneState.missing) {
-        onFrameRequest(frameIndex)
-    } else {
-        Triple(null, null, null)
-    }
 
     Row(
         modifier = modifier,
@@ -87,9 +73,11 @@ fun ShinyMeshComparison(
             pairedMethod = pairedMethod,
             bitmapL = bitmapL,
             bitmapR = bitmapR,
+            playing = playing,
             portrait = portrait,
             onSceneChange = onSceneChange,
             onPairedMethodChange = onPairedMethodChange,
+            onPlayingChange = { onPlayingChange(it, coroutineScope) },
         )
 
         if (extra) {
@@ -112,10 +100,12 @@ private fun ShinyMeshViewer(
     pairedMethod: ReconstructionMethod,
     bitmapL: ImageBitmap?,
     bitmapR: ImageBitmap?,
+    playing: Boolean,
     portrait: Boolean,
     modifier: Modifier = Modifier,
     onSceneChange: (Int) -> Unit,
     onPairedMethodChange: (ReconstructionMethod) -> Unit,
+    onPlayingChange: (Boolean) -> Unit,
 ) {
     val monoFamily = getJetBrainsMonoFamily()
     val labelStyle = if (portrait) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineMedium
@@ -140,6 +130,18 @@ private fun ShinyMeshViewer(
                 contentDescriptionR = null,
                 modifier = Modifier.align(Alignment.Center),
             )
+
+            IconButton(
+                modifier = Modifier.align(Alignment.BottomCenter).pointerHoverIcon(PointerIcon.Hand),
+                onClick = { onPlayingChange(!playing) },
+            ) {
+                Icon(
+                    imageVector = if (playing) Icons.Filled.PauseCircle else Icons.Filled.PlayCircle,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp),
+                )
+            }
 
             Text(
                 text = "Ours",

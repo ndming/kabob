@@ -1,6 +1,5 @@
 package com.ndming.kabob.media
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -63,66 +62,6 @@ fun ImagePair(
 
             Image(
                 bitmap = bitmapL!!,
-                contentDescription = contentDescriptionL,
-                modifier = Modifier.fillMaxSize().clipLeft(fraction)
-            )
-        }
-    }
-}
-
-@Composable
-fun AnimatedImagePair(
-    loading: Boolean,
-    missing: Boolean,
-    contentDescriptionL: String?,
-    contentDescriptionR: String?,
-    modifier: Modifier = Modifier,
-    frameCount: Int = 200,
-    frameDuration: Int = 1000 / 24,
-    onFrameRequest: (Int) -> Pair<ImageBitmap, ImageBitmap>,
-) {
-    val transition = rememberInfiniteTransition()
-    val frameIndex by transition.animateValue(
-        initialValue = 0,
-        targetValue = frameCount - 1,
-        typeConverter = Int.VectorConverter,
-        animationSpec = infiniteRepeatable(
-            keyframes {
-                durationMillis = 0
-                repeat(frameCount) {
-                    it at durationMillis
-                    durationMillis += frameDuration
-                }
-            }
-        )
-    )
-
-    var fraction by remember { mutableStateOf(0.5f) }
-
-    if (loading) {
-        CircularProgressIndicator(modifier = modifier)
-    } else if (missing) {
-        Icon(
-            imageVector = Icons.Default.Engineering,
-            contentDescription = null,
-            modifier = modifier.size(64.dp),
-            tint = LocalContentColor.current.copy(alpha = 0.6f)
-        )
-    } else {
-        val (bitmapL, bitmapR) = onFrameRequest(frameIndex)
-        ImagePairBox(
-            modifier = modifier,
-            fraction = fraction,
-            onFractionChange = { fraction = it },
-        ) {
-            Image(
-                bitmap = bitmapR,
-                contentDescription = contentDescriptionR,
-                modifier = Modifier.fillMaxSize().clipRight(fraction)
-            )
-
-            Image(
-                bitmap = bitmapL,
                 contentDescription = contentDescriptionL,
                 modifier = Modifier.fillMaxSize().clipLeft(fraction)
             )

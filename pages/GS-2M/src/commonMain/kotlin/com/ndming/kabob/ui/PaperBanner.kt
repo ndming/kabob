@@ -119,7 +119,7 @@ fun PaperBanner(modifier: Modifier = Modifier) {
 private enum class Author(val fullName: String, val affiliates: List<Int>) {
     Minh("Dinh Minh Nguyen", listOf(1)),
     Malte("Malte Avenhaus", listOf(2)),
-    Thomas("Thomas Lindemeier", listOf(2)),
+    // Thomas("Thomas Lindemeier", listOf(2)),
     Phlippe("Philippe Colantoni", listOf(3)),
 }
 

@@ -1,11 +1,14 @@
 package com.ndming.kabob
 
+import androidx.compose.animation.core.*
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.lifecycle.viewModelScope
 import com.ndming.kabob.gs_2m.generated.resources.Res
 import com.ndming.kabob.theme.ThemeAwareViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +18,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.MissingResourceException
+import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
@@ -34,14 +38,22 @@ enum class ReconstructionMethod(val prefix: String, val authors: String, val yea
 }
 
 data class Gs2mUiState(
+    val dtuViewerBitmapGT: ImageBitmap? = null,
     val dtuViewerSceneIndex: Int = 0,
     val dtuViewerSceneState: AnimatedImageState = AnimatedImageState(),
+    val shinyViewerBitmapL: ImageBitmap? = null,
+    val shinyViewerBitmapR: ImageBitmap? = null,
     val shinyViewerSceneIndex: Int = 0,
     val shinyViewerSceneState: AnimatedImageState = AnimatedImageState(),
     val shinyViewerPairedMap: DecompositionMap = DecompositionMap.Normal,
+    val shinyViewerPlaying: Boolean = false,
+    val shinyMeshBitmapL: ImageBitmap? = null,
+    val shinyMeshBitmapR: ImageBitmap? = null,
+    val shinyMeshBitmapGT: ImageBitmap? = null,
     val shinyMeshSceneIndex: Int = 0,
     val shinyMeshSceneState: AnimatedImageState = AnimatedImageState(),
     val shinyMeshPairedMethod: ReconstructionMethod = ReconstructionMethod.PGSR,
+    val shinyMeshPlaying: Boolean = false,
     val chamfer: DtuQuantitativeData = DtuQuantitativeData(),
     val psnr: DtuQuantitativeData = DtuQuantitativeData(),
 )
@@ -100,13 +112,22 @@ class Gs2mViewModel : ThemeAwareViewModel() {
             ByteArray(0)
         }
 
-        if (bytes.isEmpty()) {
+        val bytesGT = try {
+            Res.readBytes("files/dtu/scan${DTU_SCENES[index]}/gt.png")
+        } catch (_: MissingResourceException) {
+            ByteArray(0)
+        }
+
+        if (bytes.isEmpty() || bytesGT.isEmpty()) {
             _uiState.update { it.copy(dtuViewerSceneState = AnimatedImageState(loading = false, missing = true)) }
         } else {
             val codec = Codec.makeFromData(Data.makeFromBytes(bytes))
             val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
             dtuViewerData = AnimatedImageData(codec, bitmap)
-            _uiState.update { it.copy(dtuViewerSceneState = AnimatedImageState(loading = false, missing = false)) }
+            _uiState.update { it.copy(
+                dtuViewerSceneState = AnimatedImageState(loading = false, missing = false),
+                dtuViewerBitmapGT = bytesGT.decodeToImageBitmap(),
+            ) }
         }
     }
 
@@ -153,17 +174,36 @@ class Gs2mViewModel : ThemeAwareViewModel() {
             _uiState.update { it.copy(shinyViewerSceneState = AnimatedImageState(loading = false, missing = true)) }
         } else {
             shinyViewerData = loadPairedData(bytesL, bytesR)
+            loadShinyViewerFrame(shinyViewerAnimator.value)
             _uiState.update { it.copy(shinyViewerSceneState = AnimatedImageState(loading = false, missing = false)) }
         }
     }
 
-    fun requestShinyViewerFrame(index: Int): Pair<ImageBitmap, ImageBitmap> {
-        viewModelScope.launch {
-            shinyViewerData.codecL.readPixels(shinyViewerData.bitmapL, index)
-            val mapIndex = _uiState.value.shinyViewerPairedMap.ordinal
-            shinyViewerData.codecs[mapIndex].readPixels(shinyViewerData.bitmapR, index)
+    private val shinyViewerAnimator = Animatable(0, Int.VectorConverter)
+
+    fun changeShinyViewerPlaying(playing: Boolean, scope: CoroutineScope) {
+        if (!playing) {
+            scope.launch { shinyViewerAnimator.stop() }
+        } else {
+            scope.launch {
+                shinyViewerAnimator.animatePlay(SHINY_FRAME_COUNT, FRAME_DURATION) {
+                    loadShinyViewerFrame(it)
+                }
+            }
         }
-        return shinyViewerData.bitmapL.asComposeImageBitmap() to shinyViewerData.bitmapR.asComposeImageBitmap()
+        _uiState.update { it.copy(shinyViewerPlaying = playing) }
+    }
+
+    private fun loadShinyViewerFrame(index: Int) {
+        with(shinyViewerData) {
+            codecL.readPixels(bitmapL, index)
+            val mapIndex = _uiState.value.shinyViewerPairedMap.ordinal
+            codecs[mapIndex].readPixels(bitmapR, index)
+            _uiState.update { it.copy(
+                shinyViewerBitmapL = bitmapL.asComposeImageBitmap(),
+                shinyViewerBitmapR = bitmapR.asComposeImageBitmap(),
+            ) }
+        }
     }
 
     fun changeShinyViewerScene(index: Int) {
@@ -180,6 +220,9 @@ class Gs2mViewModel : ThemeAwareViewModel() {
 
     fun changeShinyViewerPairedMap(map: DecompositionMap) {
         _uiState.update { it.copy(shinyViewerPairedMap = map) }
+        if (!shinyViewerAnimator.isRunning) {
+            loadShinyViewerFrame(shinyViewerAnimator.value)
+        }
     }
 
     private var shinyMeshJob: Job = viewModelScope.launch { loadShinyMeshScene() }
@@ -215,22 +258,36 @@ class Gs2mViewModel : ThemeAwareViewModel() {
             val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
             shinyMeshGTData = AnimatedImageData(codec, bitmap)
             shinyMeshData = loadPairedData(bytesL, bytesR)
+            loadShinyMeshFrame(shinyMeshAnimator.value)
             _uiState.update { it.copy(shinyMeshSceneState = AnimatedImageState(loading = false, missing = false)) }
         }
     }
 
-    fun requestShinyMeshFrame(index: Int): Triple<ImageBitmap, ImageBitmap, ImageBitmap> {
-        viewModelScope.launch {
-            shinyMeshGTData.codec.readPixels(shinyMeshGTData.bitmap, index)
-            shinyMeshData.codecL.readPixels(shinyMeshData.bitmapL, index)
-            val methodIndex = _uiState.value.shinyMeshPairedMethod.ordinal
-            shinyMeshData.codecs[methodIndex].readPixels(shinyMeshData.bitmapR, index)
+    private val shinyMeshAnimator = Animatable(0, Int.VectorConverter)
+
+    fun changeShinyMeshPlaying(playing: Boolean, scope: CoroutineScope) {
+        if (!playing) {
+            scope.launch { shinyMeshAnimator.stop() }
+        } else {
+            scope.launch {
+                shinyMeshAnimator.animatePlay(SHINY_FRAME_COUNT, FRAME_DURATION) {
+                    loadShinyMeshFrame(it)
+                }
+            }
         }
-        return Triple(
-            shinyMeshGTData.bitmap.asComposeImageBitmap(),
-            shinyMeshData.bitmapL.asComposeImageBitmap(),
-            shinyMeshData.bitmapR.asComposeImageBitmap()
-        )
+        _uiState.update { it.copy(shinyMeshPlaying = playing) }
+    }
+
+    private fun loadShinyMeshFrame(index: Int) {
+        shinyMeshGTData.codec.readPixels(shinyMeshGTData.bitmap, index)
+        shinyMeshData.codecL.readPixels(shinyMeshData.bitmapL, index)
+        val methodIndex = _uiState.value.shinyMeshPairedMethod.ordinal
+        shinyMeshData.codecs[methodIndex].readPixels(shinyMeshData.bitmapR, index)
+        _uiState.update { it.copy(
+            shinyMeshBitmapGT = shinyMeshGTData.bitmap.asComposeImageBitmap(),
+            shinyMeshBitmapL = shinyMeshData.bitmapL.asComposeImageBitmap(),
+            shinyMeshBitmapR = shinyMeshData.bitmapR.asComposeImageBitmap(),
+        ) }
     }
 
     fun changeShinyMeshScene(index: Int) {
@@ -247,6 +304,9 @@ class Gs2mViewModel : ThemeAwareViewModel() {
 
     fun changeShinyMeshPairedMethod(method: ReconstructionMethod) {
         _uiState.update { it.copy(shinyMeshPairedMethod = method) }
+        if (!shinyMeshAnimator.isRunning) {
+            loadShinyMeshFrame(shinyMeshAnimator.value)
+        }
     }
 
     private fun loadPairedData(bytesL: ByteArray, bytesR: List<ByteArray>): AnimatedImagePairData {
@@ -294,5 +354,30 @@ class Gs2mViewModel : ThemeAwareViewModel() {
         val DTU_SCENES = listOf(24, 37, 40, 55, 63, 65, 69, 83, 97, 105, 106, 110, 114, 118, 122)
         val SHINY_SCENES = listOf("helmet", "car", "teapot", "ball", "coffee", "toaster")
         val SHINY_MESHES = listOf("ball", "car", "teapot", "helmet", "coffee", "toaster")
+        private const val SHINY_FRAME_COUNT = 200
+        private const val FRAME_DURATION = 1000 / 24
+    }
+}
+
+private suspend fun Animatable<Int, AnimationVector1D>.animatePlay(
+    frameCount: Int,
+    frameDuration: Int,
+    onFrame: (Int) -> Unit,
+) {
+    // Ongoing animatable retains its state when stopped, we will have to animate it to the full period
+    // before starting the infinitely repeatable animation
+    if (value > 0) {
+        val remainingDuration = (frameCount - value - 1) * frameDuration
+        animateTo(frameCount - 1, tween(remainingDuration, easing = LinearEasing)) {
+            onFrame(this@animatePlay.value)
+        }
+        // This resets the state to 0, otherwise we'd stuck at 1
+        delay(frameDuration.toLong())
+        snapTo(0)
+        onFrame(0)
+    }
+    val duration = (frameCount - 1) * frameDuration
+    animateTo(frameCount - 1, infiniteRepeatable(tween(duration, easing = LinearEasing))) {
+        onFrame(this@animatePlay.value)
     }
 }

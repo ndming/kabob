@@ -27,12 +27,12 @@ fun main() {
                 onProfileChange = gs2mViewModel::changeProfile,
                 onDtuViewerFrameRequest = gs2mViewModel::requestDtuViewerFrame,
                 onDtuViewerSceneChange = gs2mViewModel::changeDtuViewerScene,
-                onShinyViewerFrameRequest = gs2mViewModel::requestShinyViewerFrame,
                 onShinyViewerSceneChange = gs2mViewModel::changeShinyViewerScene,
                 onShinyViewerPairedMapChange = gs2mViewModel::changeShinyViewerPairedMap,
-                onShinyMeshFrameRequest = gs2mViewModel::requestShinyMeshFrame,
                 onShinyMeshSceneChange = gs2mViewModel::changeShinyMeshScene,
                 onShinyMeshPairedMethodChange = gs2mViewModel::changeShinyMeshPairedMethod,
+                onShinyViewerPlayingChange = gs2mViewModel::changeShinyViewerPlaying,
+                onShinyMeshPlayingChange = gs2mViewModel::changeShinyMeshPlaying,
             )
         }
     }

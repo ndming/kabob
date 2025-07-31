@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.ndming.kabob.markup.HyperlinkText
 import com.ndming.kabob.theme.Profile
 import com.ndming.kabob.ui.*
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Gs2mPage(
@@ -22,12 +24,12 @@ fun Gs2mPage(
     onProfileChange: (Profile) -> Unit = {},
     onDtuViewerFrameRequest: (Int) -> ImageBitmap,
     onDtuViewerSceneChange: (Int) -> Unit,
-    onShinyViewerFrameRequest: (Int) -> Pair<ImageBitmap, ImageBitmap>,
     onShinyViewerSceneChange: (Int) -> Unit,
     onShinyViewerPairedMapChange: (DecompositionMap) -> Unit,
-    onShinyMeshFrameRequest: (Int) -> Triple<ImageBitmap, ImageBitmap, ImageBitmap>,
     onShinyMeshSceneChange: (Int) -> Unit,
     onShinyMeshPairedMethodChange: (ReconstructionMethod) -> Unit,
+    onShinyViewerPlayingChange: (Boolean, CoroutineScope) -> Unit,
+    onShinyMeshPlayingChange: (Boolean, CoroutineScope) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -39,6 +41,10 @@ fun Gs2mPage(
                     onProfileChange = onProfileChange,
                 )
 
+                if (scrollState.value > 0) {
+                    HorizontalDivider()
+                }
+
                 BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
                     val portrait = maxWidth / maxHeight < 1.0f
 
@@ -49,17 +55,21 @@ fun Gs2mPage(
                         PaperBanner()
 
                         PaperCover(
+                            dtuViewerBitmapGT = uiState.dtuViewerBitmapGT,
                             dtuViewerSceneIndex = uiState.dtuViewerSceneIndex,
                             dtuViewerSceneState = uiState.dtuViewerSceneState,
+                            shinyViewerBitmapL = uiState.shinyViewerBitmapL,
+                            shinyViewerBitmapR = uiState.shinyViewerBitmapR,
                             shinyViewerSceneIndex = uiState.shinyViewerSceneIndex,
                             shinyViewerSceneState = uiState.shinyViewerSceneState,
                             shinyViewerPairedMap = uiState.shinyViewerPairedMap,
+                            shinyViewerPlaying = uiState.shinyViewerPlaying,
                             portrait = portrait,
                             onDtuViewerFrameRequest = onDtuViewerFrameRequest,
                             onDtuViewerSceneChange = onDtuViewerSceneChange,
-                            onShinyViewerFrameRequest = onShinyViewerFrameRequest,
                             onShinyViewerSceneChange = onShinyViewerSceneChange,
                             onShinyViewerPairedMapChange = onShinyViewerPairedMapChange,
+                            onShinyViewerPlayingChange = onShinyViewerPlayingChange,
                         )
 
                         Spacer(modifier = Modifier.height(56.dp))
@@ -124,13 +134,17 @@ fun Gs2mPage(
                         }
 
                         ShinyMeshComparison(
+                            bitmapGT = uiState.shinyMeshBitmapGT,
+                            bitmapL = uiState.shinyMeshBitmapL,
+                            bitmapR = uiState.shinyMeshBitmapR,
                             sceneIndex = uiState.shinyMeshSceneIndex,
                             sceneState = uiState.shinyMeshSceneState,
                             pairedMethod = uiState.shinyMeshPairedMethod,
+                            playing = uiState.shinyMeshPlaying,
                             portrait = portrait,
-                            onFrameRequest = onShinyMeshFrameRequest,
                             onSceneChange = onShinyMeshSceneChange,
                             onPairedMethodChange = onShinyMeshPairedMethodChange,
+                            onPlayingChange = onShinyMeshPlayingChange,
                         )
 
                         Spacer(modifier = Modifier.height(64.dp))
