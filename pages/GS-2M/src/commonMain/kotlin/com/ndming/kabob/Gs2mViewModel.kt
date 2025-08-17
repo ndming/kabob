@@ -33,8 +33,9 @@ enum class DecompositionMap(val resName: String, val fullName: String, val short
 
 @Suppress("SpellCheckingInspection")
 enum class ReconstructionMethod(val prefix: String, val authors: String, val year: String, val title: String, val venue: String) {
-    PGSR("PGSR", "Chen, D., Li, H., Ye, W., Wang, Y., Xie, W., Zhai, S., Wang, N., Liu, H., Bao, H., and Zhang, G.", "2024", "Pgsr: Planar-based gaussian splatting for efficient and high-fidelity surface reconstruction", "IEEE Transactions on Visualization and Computer Graphics"),
     TDGS("2DGS", "Huang, B., Yu, Z., Chen, A., Geiger, A., and Gao, S.", "2024", "2d gaussian splatting for geometrically accurate radiance fields", "SIGGRAPH 2024 Conference Papers. Association for Computing Machinery"),
+    GOF("GOF", "Yu, Z., Sattler, T., and Geiger, A.", "2024", "Gaussian opacity fields: Efficient adaptive surface reconstruction in unbounded scenes", "SIGGRAPH ASIA 2024 (Journal Track). ACM Transactions on Graphics"),
+    PGSR("PGSR", "Chen, D., Li, H., Ye, W., Wang, Y., Xie, W., Zhai, S., Wang, N., Liu, H., Bao, H., and Zhang, G.", "2024", "Pgsr: Planar-based gaussian splatting for efficient and high-fidelity surface reconstruction", "IEEE Transactions on Visualization and Computer Graphics"),
 }
 
 data class Gs2mUiState(
