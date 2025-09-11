@@ -19,8 +19,8 @@ fun main() {
             MainPage(
                 uiState = uiState,
                 initialRoute = mainViewModel.initialRoute.route,
-                onRouteChange = mainViewModel::changeRoute,
-                onHideNavRail = mainViewModel::changeNavigationRailVisibility,
+                onTopicChange = mainViewModel::changeRoute,
+                onHideNavPanel = mainViewModel::changeNavPanelVisibility,
                 onProfileChange = mainViewModel::changeProfile,
             )
         }

@@ -48,6 +48,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.navigation.compose)
+            implementation(libs.jetbrains.markdown)
         }
     }
 }

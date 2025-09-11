@@ -1,22 +1,16 @@
 <resources>
     <string name="nav_panel_home_label">Home</string>
-    <string name="nav_panel_article_label">Articles</string>
-    <string name="nav_panel_visualization_label">Visuals</string>
-    <string name="nav_panel_simulation_label">Sims</string>
-
-    <string name="nav_portrait_visualization_label">Visualizations</string>
-    <string name="nav_portrait_simulation_label">Simulations</string>
-
-    <string name="top_bar_home_title">home</string>
-    <string name="top_bar_article_title">articles</string>
-    <string name="top_bar_visualization_title">visualizations</string>
-    <string name="top_bar_simulation_title">simulations</string>
+    <string name="nav_panel_publication_label">Publications</string>
+    <string name="nav_panel_visualization_label">Visualizations</string>
+    <string name="nav_panel_simulation_label">Simulations</string>
 
     <string name="banner_title">Dinh Minh Nguyen</string>
     <string name="banner_profession">MSc in Visual Computing</string>
-    <string name="banner_location">Oberkochen, Germany</string>
+    <string name="banner_interests">Graphics Programming, 3D Reconstruction, Neural Rendering</string>
 
-    <string name="home_overview_info">I’m currently pursuing a Master’s in Optics, Image, Vision, and Multimedia at the Norwegian University of Science and Technology. The program is constructed under the Erasmus COSI framework, specializing in computer graphics, image processing, and color science. My Master's thesis focuses on Gaussian splatting for accurate mesh reconstruction from multi-view images, conducted at Carl ZEISS AG in Germany. The work was supervised by Dr. Malte Avenhaus, Dr. Thomas Lindemeier, and academic advisor, Dr. Philippe Colantoni, from Université Jean-Monnet. During this time, I also contribute to the team's internal project, including the integration of ray-tracing for semi-transparent particles. Prior to my Master's, I hold a Bachelor’s in Computer Engineering from Ho Chi Minh City University of Technology, where I graduated with top honors and conducted research on 3D navigation systems using graphics rendering.</string>
+    <string name="home_info_overview">I am deeply interested in computer graphics and 3D vision, with a strong foundation in graphics programming and real-time systems that supports my research ambitions.</string>
+    <string name="home_info_academic">I completed my Master’s degree within the distinguished Erasmus Mundus Joint Master’s COSI Program hosted at the Norwegian University of Science and Technology. I graduated top class of 2025 with the best-ranked Master’s thesis, conducted at Carl Zeiss AG in Germany and under joint supervision with Université Jean Monnet in France.</string>
+
     <string name="home_skill_tag_cpp">C/C++</string>
     <string name="home_skill_tag_vulkan">Vulkan</string>
     <string name="home_skill_tag_glsl">GLSL</string>
@@ -24,14 +18,8 @@
     <string name="home_skill_tag_python">Python</string>
     <string name="home_skill_tag_torch">PyTorch</string>
 
-    <string name="home_interest_section_title">Interests</string>
-    <string name="home_project_section_title">Projects</string>
-
-    <string name="main_article_topic_svm_title">Support Vector Machine</string>
-    <string name="main_article_topic_brdf_title">BRDF</string>
-
-    <string name="main_article_tag_ml_name">Machine Learning</string>
-    <string name="main_article_tag_cg_name">Computer Graphics</string>
+    <string name="home_research_section_title">Research Interests</string>
+    <string name="home_personal_section_title">Personal Projects</string>
 
     <string name="main_visual_topic_fs_title">Fourier Series</string>
     <string name="main_visual_topic_metaball_title">Metaballs</string>

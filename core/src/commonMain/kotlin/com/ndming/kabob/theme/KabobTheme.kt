@@ -17,13 +17,12 @@ fun KabobTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (profile == Profile.LIGHT) concept.lightScheme else concept.darkScheme
-
-    val poppinsFamily = getPoppinsFamily()
+    val fontFamily = getOpenSansFamily()
 
     CompositionLocalProvider(LocalKabobTheme provides KabobTheme(profile, concept)) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = getKabobTypography(poppinsFamily),
+            typography = getKabobTypography(fontFamily),
             content = content
         )
     }
