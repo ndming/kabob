@@ -56,7 +56,7 @@ fun MainNavGraph(
             popEnterTransition = { fadeIn(tween(400)) },
             popExitTransition = { fadeOut(tween(200)) },
         ) {
-            PublicationPage(portrait = portrait)
+            PublicationPage()
         }
 
         composable(

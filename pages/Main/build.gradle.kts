@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "com.ndming.kabob"
@@ -49,6 +50,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.jetbrains.markdown)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }

@@ -1,0 +1,78 @@
+[
+  {
+    "title": "GS-2M: Gaussian Splatting for Joint Mesh Reconstruction and Material Decomposition",
+    "year": 2025,
+    "authors": ["Dinh Minh Nguyen", "Malte Avenhaus", "Thomas Lindemeier", "Philippe Colantoni"],
+    "links": [
+      {
+        "text": "Webpage",
+        "url": "https://ndming.github.io/publications/gs2m"
+      },
+      {
+        "text": "Code",
+        "url": "https://github.com/ndming/GS-2M"
+      }
+    ],
+    "highlight": "1st-ranked Master's Thesis COSI 2025",
+    "media": "gs2m.png",
+    "tags": ["thesis", "report", "presentation", "code"],
+    "abstract": "We propose a unified solution for mesh reconstruction and material decomposition from multi-view images, referred to as GS–2M. Previous works address these tasks separately and either struggle to reconstruct highly reflective surfaces or require priors from external models to enhance the decomposition results. While there are contemporary works that faithfully address these tasks together, they often employ sophisticated multi layer perceptron to learn scene components. By contrast, our method tackles these two problems by jointly optimizing attributes relevant to the quality of rendered depth and normal under a unified framework. To eliminate sophisticated modeling of neural components, we propose a roughness supervision strategy based on multi-view photometric clues. When combined with a carefully designed loss and optimization process, GS–2M produces comparable results to state-of-the-art methods, delivering triangle meshes and their associated material components for downstream tasks. We validate the effectiveness of our approach with datasets extensively used in previous works and qualitative results showcasing its performance."
+  },
+  {
+    "title": "Deep-Learning-Based Spatially Coherent Lighting for Realistic Virtual Object Insertion",
+    "year": 2024,
+    "authors": ["Truc Huynh Luong Phuong", "Minh Dinh Nguyen"],
+    "links": [
+      {
+        "text": "ResearchGate",
+        "url": "http://dx.doi.org/10.13140/RG.2.2.31028.56966"
+      },
+      {
+        "text": "Code",
+        "url": "https://github.com/ndming/virtual-object-insertion"
+      }
+    ],
+    "highlight": "CVCS 2024 Conference Poster",
+    "media": "",
+    "tags": ["poster", "code"],
+    "abstract": "In mixed reality and image editing, inserting virtual objects into real photos is a common practice that requires precise scene geometry and lighting adjustments to ensure realistic occlusion and seamless integration. This task becomes particularly challenging in indoor environments with varying lighting conditions, where nearby lights, shadows, and light reflections off surrounding objects complicate the process.To address these challenges, we developed a fully automatic deep-learning-based pipeline to insert virtual objects into RGB images. Our approach effectively handles diffuse and glossy objects by integrating two complementary lighting models, ensuring spatially coherent lighting across the scene."
+  },
+  {
+    "title": "An IoT Solution for Multiple Sensors Control and Management",
+    "year": 2022,
+    "authors": ["Bao Bach-Gia", "Lam Luu-Trinh", "Minh Nguyen-Dinh", "Trung Pham-Dinh", "Cuong Pham-Quoc"],
+    "links": [
+      {
+        "text": "IEEEXplore",
+        "url": "https://doi.org/10.1109/NICS56915.2022.10013474"
+      }
+    ],
+    "highlight": "NICS 2022 Conference Paper",
+    "media": "",
+    "tags": ["conference"],
+    "abstract": "The era of the fourth industrial revolution and the Covid-19 pandemic gives rise to the incredible growth of the IoT (Internet of Things) field. The trend of an immense amount of devices connected to specific networks brings up various problems, but most noticeable, control and management issues. In this paper, we propose a structural and efficient solution to solve this problem in a large-scale IoT system - along with two implementations of the proposed solution. The paper's main contribution is to present an overview of the architecture for an IoT system inspired by numerous IoT-based implementations. The design is expected to be dynamic, transparent, and easily deployed for newcomers. Furthermore, with the different implementations in health care and agriculture mentioned later, we want to demonstrate the flexibility and adaptability of the design to various fields."
+  },
+  {
+    "title": "An FPGA-based Solution for Convolution Operation Acceleration",
+    "year": 2022,
+    "authors": ["Trung Dinh Pham", "Bao Gia Bach", "Lam Trinh Luu", "Minh Dinh Nguyen", "Hai Duc Pham", "Khoa Bui Anh", "Xuan Quang Nguyen", "Cuong Pham Quoc"],
+    "links": [
+      {
+        "text": "arXiv",
+        "url": "https://arxiv.org/abs/2206.04520"
+      },
+      {
+        "text": "Springer",
+        "url": "https://link.springer.com/chapter/10.1007/978-3-031-15063-0_26"
+      },
+      {
+        "text": "Code",
+        "url": "https://github.com/trung-pham-dinh/CNN-on-FPGA"
+      }
+    ],
+    "highlight": "ICIT 2022 Conference Paper",
+    "media": "",
+    "tags": ["conference", "presentation", "code"],
+    "abstract": "Hardware-based acceleration is an extensive attempt to facilitate many computationally-intensive mathematics operations. This paper proposes an FPGA-based architecture to accelerate the convolution operation - a complex and expensive computing step that appears in many Convolutional Neural Network models. We target the design to the standard convolution operation, intending to launch the product as an edge-AI solution. The project’s purpose is to produce an FPGA IP core that can process a convolutional layer at a time. System developers can deploy the IP core with various FPGA families by using Verilog HDL as the primary design language for the architecture. The experimental results show that our single computing core synthesized on a simple edge computing FPGA board can offer 0.224 GOPS. When the board is fully utilized, 4.48 GOPS can be achieved."
+  }
+]

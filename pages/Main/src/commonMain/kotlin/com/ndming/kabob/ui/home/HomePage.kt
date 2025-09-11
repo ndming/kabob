@@ -283,58 +283,44 @@ private fun NewsPanel(
                         animationSpec = spring(Spring.DampingRatioLowBouncy),
                     )
 
-                    Box {
-                        LazyColumn(
-                            state = listState,
-                            contentPadding = PaddingValues(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(24.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onPointerEvent(PointerEventType.Enter) { showScroll = true }
-                                .onPointerEvent(PointerEventType.Exit) { showScroll = false }
-                                .drawWithCache {
-                                    val topBrush = Brush.verticalGradient(listOf(surfaceColor.copy(alpha = 0.4f), surfaceColor.copy(alpha = 0.0f)))
-                                    val botBrush = Brush.verticalGradient(listOf(surfaceColor.copy(alpha = 0.0f), surfaceColor.copy(alpha = 0.4f)))
+                    LazyColumn(
+                        state = listState,
+                        contentPadding = PaddingValues(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onPointerEvent(PointerEventType.Enter) { showScroll = true }
+                            .onPointerEvent(PointerEventType.Exit) { showScroll = false }
+                            .drawWithCache {
+                                val topBrush = Brush.verticalGradient(listOf(surfaceColor.copy(alpha = 0.4f), surfaceColor.copy(alpha = 0.0f)))
+                                val botBrush = Brush.verticalGradient(listOf(surfaceColor.copy(alpha = 0.0f), surfaceColor.copy(alpha = 0.4f)))
 
-                                    onDrawWithContent {
-                                        drawContent()
+                                onDrawWithContent {
+                                    drawContent()
 
-                                        drawRect(
-                                            brush = topBrush,
-                                            size = Size(size.width, 20.0f)
-                                        )
+                                    drawRect(
+                                        brush = topBrush,
+                                        size = Size(size.width, 20.0f)
+                                    )
 
-                                        drawRect(
-                                            brush = botBrush,
-                                            topLeft = Offset(0.0f, size.height - 20.0f)
-                                        )
+                                    drawRect(
+                                        brush = botBrush,
+                                        topLeft = Offset(0.0f, size.height - 20.0f)
+                                    )
 
-                                        drawRoundRect(
-                                            color = scrollBarColor,
-                                            cornerRadius = CornerRadius(2.0f, 2.0f),
-                                            topLeft = Offset(size.width - scrollBarVisibleOffset, (size.height - 24.0f) * scrollFraction + 12.0f),
-                                            size = Size(4.0f, (size.height - 24.0f) * scrollBarLengthFraction),
-                                        )
-                                    }
-                                },
-                        ) {
-                            items(news) { newsItem ->
-                                val paragraph = newsItem.children[1] // 0: item bullet, 1: paragraph
-                                MarkdownParagraph(paragraph, text, monoFamily)
-                            }
+                                    drawRoundRect(
+                                        color = scrollBarColor,
+                                        cornerRadius = CornerRadius(2.0f, 2.0f),
+                                        topLeft = Offset(size.width - scrollBarVisibleOffset, (size.height - 24.0f) * scrollFraction + 12.0f),
+                                        size = Size(4.0f, (size.height - 24.0f) * scrollBarLengthFraction),
+                                    )
+                                }
+                            },
+                    ) {
+                        items(news) { newsItem ->
+                            val paragraph = newsItem.children[1] // 0: item bullet, 1: paragraph
+                            MarkdownParagraph(paragraph, text, monoFamily)
                         }
-
-//                        Surface(
-//                            modifier = Modifier.fillMaxWidth().height(20.dp).align(Alignment.TopCenter),
-//                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
-//                        ) {
-//                        }
-//
-//                        Surface(
-//                            modifier = Modifier.fillMaxWidth().height(20.dp).align(Alignment.BottomCenter),
-//                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
-//                        ) {
-//                        }
                     }
                 }
             }
