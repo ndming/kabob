@@ -16,7 +16,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PaperAbstract(modifier: Modifier = Modifier) {
-    Card(modifier = modifier.widthIn(max = 1100.dp).fillMaxWidth().padding(24.dp)) {
+    Card(modifier = modifier.widthIn(max = 1132.dp).fillMaxWidth().padding(24.dp)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

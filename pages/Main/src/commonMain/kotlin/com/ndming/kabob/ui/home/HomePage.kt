@@ -498,23 +498,18 @@ private fun HomeHeadlines(
                 tint = LocalContentColor.current.copy(alpha = 0.6f)
             )
             if (portrait) {
-                SkillTag.entries.forEachIndexed { index, tag ->
-                    if (index > 0) {
-                        Spacer(Modifier.width(6.dp))
-                        Icon(
-                            imageVector = Icons.Filled.Hexagon,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primaryContainer,
-                            modifier = Modifier.size(6.dp),
-                        )
-                        Spacer(Modifier.width(6.dp))
-                    }
-                    Text(
-                        text = stringResource(tag.title),
-                        style = headlineDetailStyle,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
-                }
+                Text(
+                    text = buildAnnotatedString {
+                        SkillTag.entries.forEachIndexed { index, tag ->
+                            if (index > 0) {
+                                append(", ")
+                            }
+                            append(stringResource(tag.title))
+                        }
+                    },
+                    style = headlineDetailStyle,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                )
             } else {
                 Text(
                     text = stringResource(Res.string.banner_interests),

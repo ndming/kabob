@@ -176,7 +176,8 @@ fun Gs2mPage(
 
                         DtuQuantitativeNvs(psnr = uiState.psnr)
 
-                        Spacer(modifier = Modifier.height(56.dp))
+                        Spacer(modifier = Modifier.height(64.dp))
+                        KabobFooter()
                     }
                 }
             }

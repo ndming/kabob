@@ -65,7 +65,11 @@ fun PublicationPage(
     }
 
     if (dataBytes.isEmpty()) {
-        LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+        Surface {
+            Column(modifier = Modifier.fillMaxSize()) {
+                LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+            }
+        }
     } else {
         val publications = rememberSaveable(dataBytes) { Json.decodeFromString<List<Publication>>(dataBytes.decodeToString()) }
         val grouped = publications.groupBy { it.year }
