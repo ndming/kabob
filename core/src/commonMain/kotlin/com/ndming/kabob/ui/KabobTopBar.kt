@@ -3,7 +3,6 @@ package com.ndming.kabob.ui
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -43,7 +42,7 @@ fun KabobTopBar(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // Header
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 headerIcon()
                 header()
             }
@@ -133,7 +132,6 @@ fun KabobTopBar(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
-                    modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE),
                 )
             }
         },

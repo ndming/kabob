@@ -222,6 +222,7 @@ private fun ChamferHeaderColumn(modifier: Modifier = Modifier) {
 private fun OurMethodRow() {
     Text(
         modifier = Modifier.padding(top = 8.dp),
+        maxLines = 1,
         text = buildAnnotatedString {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                 append("Ours")
@@ -540,7 +541,7 @@ private fun NvsColumn(
     oursRow: @Composable () -> Unit,
 ) {
     Column(
-        modifier = modifier.width(IntrinsicSize.Min),
+        modifier = modifier.width(IntrinsicSize.Max),
         horizontalAlignment = if (align) Alignment.CenterHorizontally else Alignment.Start,
     ) {
         HorizontalDivider(thickness = 4.dp, color = MaterialTheme.colorScheme.primaryContainer)

@@ -25,9 +25,10 @@ fun HyperlinkText(
     FlowRow(modifier = modifier) {
         prefix()
 
-        Column(modifier = Modifier.width(IntrinsicSize.Min)) {
+        Column(modifier = Modifier.width(IntrinsicSize.Max)) {
             Row {
                 Text(
+                    maxLines = 1,
                     text = buildAnnotatedString {
                         withLink(
                             LinkAnnotation.Url(

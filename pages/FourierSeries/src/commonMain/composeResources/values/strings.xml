@@ -1,5 +1,5 @@
 <resources>
-    <string name="fs_top_bar_title">Fourier Series - Drawing with Rotating Arrows</string>
+    <string name="fs_top_bar_title">Fourier Series</string>
 
     <string name="fs_bundle_treble_clef_display_name">Treble Clef</string>
     <string name="fs_bundle_vietnam_display_name">Vietnam</string>
