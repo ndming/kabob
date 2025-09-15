@@ -1,4 +1,4 @@
-- 2025.09.03# Graduated top class of COSI 2025 with **first-ranked** Master's thesis.
+- 2025.09.03# Graduated Class of COSI 2025 (MSc) with top honors: **highest distinction** track record and **first-ranked** Master's thesis.
 - 2025.08.15# Published GS-2M project page, check it out [here](https://ndming.github.io/publications/gs2m/).
 - 2025.07.15# Completion of Master's thesis on *Mesh Reconstruction via Differential Rendering Pipelines*.
 - 2025.02.15# Started Master's thesis at Carl Zeiss in Germany, under the supervision of Dr. Malte Avenhaus, Dr. Thomas Lindemeier, and Associate Professor Dr. Philippe Colantoni.
@@ -6,7 +6,7 @@
 - 2024.06.02# Started internship at [IXR Platform](https://ixrplatform.fr/) working on *Web-based Interaction and Visualization of Spectral Reflectance Images* under Dr. Philippe Colantoni's supervision.
 - 2024.04.15# Check out the [source code](https://github.com/ndming/virtual-object-insertion) for our *Deep-Learning-Based Spatially Coherent Lighting for Realistic Virtual Object Insertion* implementation (coursework project).
 - 2023.08.15# Joined the [EMJMD COSI](https://cosi-master.eu/) program, spanning studies at [NTNU](https://www.ntnu.no/) (Norway) and [UJM](https://www.univ-st-etienne.fr/en/index.html) (France). 
-- 2023.05.23# Graduated top class of Computer Engineering 2023 (Bachelor of Engineering) with **gold-medal** award for outstanding academic performance.
+- 2023.05.23# Graduated as valedictorian with **gold-medal** award for outstanding academic performance, Class of Computer Engineering 2023 (Bachelor of Engineering).
 - 2023.04.16# Successfully defended Bachelor's thesis on *Indoor Navigation with 3D Graphics Rendering*.
 - 2023.01.20# Paper on *An IoT Solution for Multiple Sensors Control and Management* added to [IEEE Xplore](https://doi.org/10.1109/NICS56915.2022.10013474).
 - 2022.10.31# Paper on *An IoT Solution for Multiple Sensors Control and Management* accepted at **NICS 2022**.

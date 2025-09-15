@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.ndming.kabob.core.generated.resources.kabob_logo
 import com.ndming.kabob.main.generated.resources.*
 import com.ndming.kabob.markup.HyperlinkText
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
@@ -112,6 +113,7 @@ private fun ColumnScope.ProfileHeadlines(
     Text(
         text = stringResource(Res.string.home_info_overview),
         textAlign = TextAlign.Justify,
+        fontStyle = FontStyle.Italic,
         modifier = Modifier
             .widthIn(max = pageWidth)
             .padding(horizontal = 24.dp)
@@ -428,7 +430,7 @@ private fun HomeAvatar(modifier: Modifier = Modifier) {
         }
     } else {
         Image(
-            imageVector = vectorResource(Res.drawable.kabob_logo),
+            imageVector = vectorResource(com.ndming.kabob.core.generated.resources.Res.drawable.kabob_logo),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = modifier.size(128.dp),
