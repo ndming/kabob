@@ -13,7 +13,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.Loyalty
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,7 +38,6 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.compose.resources.*
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun HomePage(
     portrait: Boolean,
@@ -57,13 +60,46 @@ fun HomePage(
     scrollState: ScrollState = rememberScrollState(),
 ) {
     val pageWidth = 960.dp
+
+    var bytes by remember { mutableStateOf(ByteArray(0)) }
+
+    LaunchedEffect(Unit) {
+        bytes = Res.readBytes("files/overview.txt")
+    }
+
     SelectionContainer {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
         ) {
-            ProfileHeadlines(pageWidth, portrait)
+            Card(
+                modifier = Modifier
+                    .widthIn(max = pageWidth)
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(32.dp),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    if (!portrait) {
+                        HomeAvatar()
+                        Spacer(Modifier.width(32.dp))
+                    }
+                    HomeHeadlines(portrait = portrait)
+                }
+            }
+
+            Spacer(Modifier.height(32.dp))
+            Text(
+                text = bytes.decodeToString(),
+                modifier = Modifier
+                    .widthIn(max = pageWidth)
+                    .padding(horizontal = 24.dp)
+                    .align(Alignment.CenterHorizontally),
+            )
 
             Spacer(Modifier.height(32.dp))
             NewsPanel(
@@ -75,7 +111,7 @@ fun HomePage(
                     .align(Alignment.CenterHorizontally),
             )
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
             ProfileDetails(pageWidth, portrait)
 
             Spacer(Modifier.height(64.dp))
@@ -85,58 +121,10 @@ fun HomePage(
 }
 
 @Composable
-private fun ColumnScope.ProfileHeadlines(
-    pageWidth: Dp,
-    portrait: Boolean,
-) {
-    Card(
-        modifier = Modifier
-            .widthIn(max = pageWidth)
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .align(Alignment.CenterHorizontally)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(32.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            if (!portrait) {
-                HomeAvatar()
-                Spacer(Modifier.width(32.dp))
-            }
-            HomeHeadlines(portrait = portrait)
-        }
-    }
-
-    Spacer(Modifier.height(32.dp))
-
-    Text(
-        text = stringResource(Res.string.home_info_overview),
-        textAlign = TextAlign.Justify,
-        fontStyle = FontStyle.Italic,
-        modifier = Modifier
-            .widthIn(max = pageWidth)
-            .padding(horizontal = 24.dp)
-            .align(Alignment.CenterHorizontally),
-    )
-}
-
-@Composable
 private fun ColumnScope.ProfileDetails(
     pageWidth: Dp,
     portrait: Boolean,
 ) {
-    Text(
-        text = stringResource(Res.string.home_info_academic),
-        textAlign = TextAlign.Justify,
-        modifier = Modifier
-            .widthIn(max = pageWidth)
-            .padding(horizontal = 24.dp)
-            .align(Alignment.CenterHorizontally),
-    )
-
-    Spacer(Modifier.height(24.dp))
-
     Section(
         title = stringResource(Res.string.home_research_section_title),
         iconImage = Icons.Outlined.Book,
@@ -156,15 +144,15 @@ private fun ColumnScope.ProfileDetails(
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "Computer Graphics",
-            trailingText = "Global Illumination, Deep Learning for Super Sampling"
+            leadingText = "3D Vision",
+            trailingText = "Scene Reconstruction, Scene Decomposition"
         )
 
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "Computer Vision",
-            trailingText = "Scene Reconstruction, Scene Decomposition"
+            leadingText = "Computer Graphics",
+            trailingText = "Global Illumination, Deep Learning for Super Sampling"
         )
 
         SectionItem(
