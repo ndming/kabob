@@ -73,7 +73,6 @@ fun Gs2mPage(
                         )
 
                         Spacer(modifier = Modifier.height(56.dp))
-
                         PaperAbstract()
 
                         Spacer(modifier = Modifier.height(48.dp))
@@ -173,8 +172,10 @@ fun Gs2mPage(
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-
                         DtuQuantitativeNvs(psnr = uiState.psnr)
+
+                        Spacer(modifier = Modifier.height(32.dp))
+                        PaperCitation()
 
                         Spacer(modifier = Modifier.height(64.dp))
                         KabobFooter()

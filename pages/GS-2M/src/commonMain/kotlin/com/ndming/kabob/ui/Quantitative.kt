@@ -39,6 +39,7 @@ enum class GsMethod(val prefix: String, val link: String) {
     GaussianSurfels("GaussianSurfels", "https://turandai.github.io/projects/gaussian_surfels"),
     GS2D("2DGS", "https://surfsplatting.github.io"),
     GOF("GOF", "https://niujinshuchong.github.io/gaussian-opacity-fields"),
+    MILo("MILo", "https://anttwo.github.io/milo"),
     PlanarGS("PGSR", "https://zju3dv.github.io/pgsr"),
     GaussSurf("GausSurf", "https://jiepengwang.github.io/GausSurf")
 }

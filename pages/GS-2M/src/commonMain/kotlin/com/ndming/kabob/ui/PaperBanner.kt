@@ -1,10 +1,9 @@
 package com.ndming.kabob.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.DisableSelection
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -14,10 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.core.generated.resources.github
+import com.ndming.kabob.gs_2m.generated.resources.Res
+import com.ndming.kabob.gs_2m.generated.resources.arxiv_logo_dark
+import com.ndming.kabob.gs_2m.generated.resources.arxiv_logo_light
+import com.ndming.kabob.theme.LocalKabobTheme
+import com.ndming.kabob.theme.Profile
 import kotlinx.browser.window
 import org.jetbrains.compose.resources.painterResource
 
@@ -67,26 +72,18 @@ fun PaperBanner(modifier: Modifier = Modifier) {
 
         Spacer(Modifier.height(32.dp))
 
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Button(
-                onClick = { window.open("composeResources/com.ndming.kabob.gs_2m.generated.resources/files/report.pdf", "_blank") },
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                onClick = { window.open("https://arxiv.org/abs/2509.22276", "_blank") },
+                modifier = Modifier.width(124.dp).height(42.dp).pointerHoverIcon(PointerIcon.Hand),
+                contentPadding = PaddingValues(vertical = 10.dp, horizontal = 30.dp),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.PictureAsPdf,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 12.dp).size(20.dp),
-                    )
-
-                    DisableSelection {
-                        Text(
-                            text = "Report",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
-                    }
-                }
+                val arxiv = if (LocalKabobTheme.current.profile == Profile.LIGHT) Res.drawable.arxiv_logo_light else Res.drawable.arxiv_logo_dark
+                Image(
+                    painter = painterResource(arxiv),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                )
             }
 
             Spacer(Modifier.width(16.dp))
