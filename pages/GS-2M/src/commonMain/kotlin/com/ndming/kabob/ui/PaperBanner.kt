@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -102,6 +104,29 @@ fun PaperBanner(modifier: Modifier = Modifier) {
                     DisableSelection {
                         Text(
                             text = "Code",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.width(16.dp))
+
+            Button(
+                onClick = { window.open("composeResources/com.ndming.kabob.gs_2m.generated.resources/files/supplementary.pdf", "_blank") },
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.PictureAsPdf,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 12.dp).size(20.dp),
+                    )
+
+                    DisableSelection {
+                        Text(
+                            text = "Supplementary",
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(top = 2.dp)
                         )
