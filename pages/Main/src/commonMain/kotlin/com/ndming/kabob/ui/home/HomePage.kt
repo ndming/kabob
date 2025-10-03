@@ -14,9 +14,7 @@ import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.Loyalty
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -38,19 +36,22 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ndming.kabob.core.generated.resources.kabob_logo
 import com.ndming.kabob.main.generated.resources.*
-import com.ndming.kabob.markup.HyperlinkText
 import com.ndming.kabob.theme.getJetBrainsMonoFamily
 import com.ndming.kabob.ui.KabobFooter
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
-import org.jetbrains.compose.resources.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.decodeToImageBitmap
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -82,13 +83,13 @@ fun HomePage(
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(32.dp),
-                    horizontalArrangement = Arrangement.Center,
+                    // horizontalArrangement = Arrangement.Center,
                 ) {
                     if (!portrait) {
                         HomeAvatar()
                         Spacer(Modifier.width(32.dp))
                     }
-                    HomeHeadlines(portrait = portrait)
+                    HomeHeadlines()
                 }
             }
 
@@ -120,11 +121,18 @@ fun HomePage(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun ColumnScope.ProfileDetails(
     pageWidth: Dp,
     portrait: Boolean,
 ) {
+    var bytes by remember { mutableStateOf(ByteArray(0)) }
+
+    LaunchedEffect(Unit) {
+        bytes = Res.readBytes("files/background.txt")
+    }
+
     Section(
         title = stringResource(Res.string.home_research_section_title),
         iconImage = Icons.Outlined.Book,
@@ -164,36 +172,17 @@ private fun ColumnScope.ProfileDetails(
     }
 
     Section(
-        title = stringResource(Res.string.home_personal_section_title),
-        iconImage = Icons.Default.Terminal,
+        title = stringResource(Res.string.home_background_section_title),
+        iconImage = Icons.Default.School,
         modifier = Modifier
             .widthIn(max = pageWidth)
             .fillMaxWidth()
             .padding(24.dp)
             .align(Alignment.CenterHorizontally),
     ) {
-        SectionItem(
-            modifier = Modifier.padding(top = 16.dp),
-            portrait = portrait,
-            leadingText = "torpedo",
-            leadingLink = "https://github.com/ndming/torpedo",
-            trailingText = "Vulkan-based renderer for semi-transparent particles",
-        )
-
-        SectionItem(
-            modifier = Modifier.padding(top = 16.dp),
-            portrait = portrait,
-            leadingText = "void",
-            leadingLink = "https://github.com/ndming/virtual-object-insertion",
-            trailingText = "virtual objection insertion with deep learning",
-        )
-
-        SectionItem(
-            modifier = Modifier.padding(top = 16.dp),
-            portrait = portrait,
-            leadingText = "pan",
-            leadingLink = "https://github.com/ndming/pan",
-            trailingText = "CLI tool for real-time HSI analysis",
+        Text(
+            text = bytes.decodeToString(),
+            textAlign = TextAlign.Justify,
         )
     }
 }
@@ -427,16 +416,18 @@ private fun HomeAvatar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun HomeHeadlines(
-    portrait: Boolean,
-    modifier: Modifier = Modifier,
-) {
+private fun HomeHeadlines(modifier: Modifier = Modifier) {
     val headlineDetailStyle = MaterialTheme.typography.bodyLarge
 
     Column(modifier = modifier) {
+        Text(
+            text = "Dinh Minh",
+            style = MaterialTheme.typography.displaySmall,
+        )
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = stringResource(Res.string.banner_title),
+                text = "Nguyen",
                 style = MaterialTheme.typography.displaySmall,
             )
             Spacer(Modifier.width(16.dp))
@@ -448,71 +439,12 @@ private fun HomeHeadlines(
             )
         }
 
-        Spacer(Modifier.height(24.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.School, null,
-                Modifier.padding(end = 8.dp),
-                tint = LocalContentColor.current.copy(alpha = 0.6f)
-            )
-
-            if (portrait) {
-                Text(
-                    text = stringResource(Res.string.banner_profession),
-                    style = headlineDetailStyle,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            } else {
-                @Suppress("SpellCheckingInspection")
-                HyperlinkText(
-                    linkText = "NTNU",
-                    linkUrl = "https://www.ntnu.edu/",
-                    prefix = {
-                        Text(
-                            text = stringResource(Res.string.banner_profession) + " – Erasmus Mundus COSI  @  ",
-                            style = headlineDetailStyle,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                        )
-                    }
-                )
-            }
-        }
-
         Spacer(Modifier.height(16.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.Loyalty, null,
-                Modifier.padding(end = 8.dp),
-                tint = LocalContentColor.current.copy(alpha = 0.6f)
-            )
-            if (portrait) {
-                Text(
-                    text = buildAnnotatedString {
-                        SkillTag.entries.forEachIndexed { index, tag ->
-                            if (index > 0) {
-                                append(", ")
-                            }
-                            append(stringResource(tag.title))
-                        }
-                    },
-                    style = headlineDetailStyle,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            } else {
-                Text(
-                    text = stringResource(Res.string.banner_interests),
-                    style = headlineDetailStyle,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            }
-        }
+        Text(
+            text = stringResource(Res.string.banner_profession),
+            style = headlineDetailStyle,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+        )
     }
-}
-
-enum class SkillTag(val title: StringResource) {
-    Cpp(Res.string.home_skill_tag_cpp),
-    Vulkan(Res.string.home_skill_tag_vulkan),
-    PyTorch(Res.string.home_skill_tag_torch),
 }

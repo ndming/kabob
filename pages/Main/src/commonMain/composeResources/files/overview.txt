@@ -1,3 +1,1 @@
 My research interests lie in 3D vision and neural rendering, particularly for real-time applications in resource-constrained systems. My work also intersects computer graphics algorithms for photorealistic rendering and generative models for visual computing.
-
-I completed my Master's degree within the distinguished Erasmus Mundus Joint Master's COSI Program, hosted at the Norwegian University of Science and Technology. I graduated Class of 2025 with first-class honors and the best-ranked Master's thesis, conducted at Carl Zeiss AG in Germany and under joint supervision with Université Jean Monnet in France.

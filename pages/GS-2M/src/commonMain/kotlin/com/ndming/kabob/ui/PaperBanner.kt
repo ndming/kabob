@@ -74,11 +74,18 @@ fun PaperBanner(modifier: Modifier = Modifier) {
 
         Spacer(Modifier.height(32.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        FlowRow(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
             Button(
                 onClick = { window.open("https://arxiv.org/abs/2509.22276", "_blank") },
-                modifier = Modifier.width(124.dp).height(42.dp).pointerHoverIcon(PointerIcon.Hand),
                 contentPadding = PaddingValues(vertical = 10.dp, horizontal = 30.dp),
+                modifier = Modifier
+                    .width(124.dp).height(42.dp)
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.CenterVertically)
+                    .pointerHoverIcon(PointerIcon.Hand),
             ) {
                 val arxiv = if (LocalKabobTheme.current.profile == Profile.LIGHT) Res.drawable.arxiv_logo_light else Res.drawable.arxiv_logo_dark
                 Image(
@@ -88,11 +95,12 @@ fun PaperBanner(modifier: Modifier = Modifier) {
                 )
             }
 
-            Spacer(Modifier.width(16.dp))
-
             Button(
                 onClick = { window.open("https://github.com/ndming/GS-2M", "_blank") },
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.CenterVertically)
+                    .pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -111,11 +119,12 @@ fun PaperBanner(modifier: Modifier = Modifier) {
                 }
             }
 
-            Spacer(Modifier.width(16.dp))
-
             Button(
                 onClick = { window.open("composeResources/com.ndming.kabob.gs_2m.generated.resources/files/supplementary.pdf", "_blank") },
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.CenterVertically)
+                    .pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(

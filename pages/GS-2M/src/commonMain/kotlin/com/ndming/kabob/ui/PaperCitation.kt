@@ -28,7 +28,7 @@ fun PaperCitation(modifier: Modifier = Modifier) {
     OutlinedCard(modifier = modifier.widthIn(max = 1200.dp).fillMaxWidth().padding(24.dp)) {
         Column{
             Text(
-                text = "Citation",
+                text = "BibTeX",
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
