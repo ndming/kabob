@@ -13,9 +13,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -135,7 +135,7 @@ private fun ColumnScope.ProfileDetails(
 
     Section(
         title = stringResource(Res.string.home_research_section_title),
-        iconImage = Icons.Outlined.Book,
+        iconImage = Icons.Default.Book,
         modifier = Modifier
             .widthIn(max = pageWidth)
             .fillMaxWidth()
