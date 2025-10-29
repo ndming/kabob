@@ -145,29 +145,29 @@ private fun ColumnScope.ProfileDetails(
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "Neural Rendering",
-            trailingText = "Gaussian Splatting, 3D Reconstruction, Image-based Rendering"
+            leadingText = "Neural scene representations",
+            trailingText = "Gaussian splatting, sparse voxels, SDF, NeRF"
         )
 
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "3D Vision",
-            trailingText = "Scene Reconstruction, Scene Decomposition"
+            leadingText = "3D vision",
+            trailingText = "3D reconstruction, scene decomposition, visual SLAM"
         )
 
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "Computer Graphics",
-            trailingText = "Global Illumination, Deep Learning for Super Sampling"
+            leadingText = "Scene generation",
+            trailingText = "vision transformers, diffusion models, world models"
         )
 
         SectionItem(
             modifier = Modifier.padding(top = 16.dp),
             portrait = portrait,
-            leadingText = "Generative AI",
-            trailingText = "Transformers and Diffusion Models for Visual Computing"
+            leadingText = "Computer graphics",
+            trailingText = "image-based rendering, differential rendering"
         )
     }
 
