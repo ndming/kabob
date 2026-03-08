@@ -37,14 +37,14 @@ fun PaperBanner(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-            text = "GS-2M: Gaussian Splatting for",
+            text = "GS-2M: Material-aware Gaussian Splatting for",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Medium,
         )
         Text(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-            text = "Joint Mesh Reconstruction and Material Decomposition",
+            text = "High-fidelity Mesh Reconstruction",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Medium,
