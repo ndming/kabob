@@ -72,12 +72,46 @@ fun PaperBanner(modifier: Modifier = Modifier) {
             }
         }
 
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(16.dp))
+
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+            text = "Eurographics 2026",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.tertiary,
+        )
+
+        Spacer(Modifier.height(16.dp))
 
         FlowRow(
             modifier = Modifier.padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
+            Button(
+                onClick = { window.open("composeResources/com.ndming.kabob.gs_2m.generated.resources/files/paper1065.pdf", "_blank") },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.CenterVertically)
+                    .pointerHoverIcon(PointerIcon.Hand),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.PictureAsPdf,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 12.dp).size(20.dp),
+                    )
+
+                    DisableSelection {
+                        Text(
+                            text = "Paper",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
+                }
+            }
+
             Button(
                 onClick = { window.open("https://arxiv.org/abs/2509.22276", "_blank") },
                 contentPadding = PaddingValues(vertical = 10.dp, horizontal = 30.dp),
@@ -113,31 +147,6 @@ fun PaperBanner(modifier: Modifier = Modifier) {
                         Text(
                             text = "Code",
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
-                    }
-                }
-            }
-
-            Button(
-                onClick = { window.open("composeResources/com.ndming.kabob.gs_2m.generated.resources/files/supplementary.pdf", "_blank") },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .align(Alignment.CenterVertically)
-                    .pointerHoverIcon(PointerIcon.Hand),
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.PictureAsPdf,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 12.dp).size(20.dp),
-                    )
-
-                    DisableSelection {
-                        Text(
-                            text = "Supplementary",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(top = 2.dp)
                         )
                     }
                 }
